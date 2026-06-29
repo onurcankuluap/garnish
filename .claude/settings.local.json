@@ -6,7 +6,8 @@
       "Bash(~/.nvm/versions/node/v18.20.8/bin/node --version)",
       "Bash(chmod +x /Users/onurcankulualp/bartender_website/dev.sh)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(cat /tmp/nextdev.log 2>/dev/null | tail -30)"
     ]
   }
 }

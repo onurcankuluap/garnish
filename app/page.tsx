@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HeroVideo from "@/components/HeroVideo";
 
 const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
 
@@ -46,7 +47,7 @@ export default function Home() {
       ══════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-end px-6 md:px-16 pb-16 md:pb-20 pt-32">
 
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_30%_55%,rgba(201,168,76,0.07)_0%,transparent_70%)] pointer-events-none" />
+        <HeroVideo />
         <div className="hidden md:block absolute left-16 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#c9a84c]/20 to-transparent pointer-events-none" />
         <span className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2 font-cormorant text-[220px] font-semibold leading-none text-white/[0.022] select-none pointer-events-none">
           BAR
@@ -124,20 +125,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* ══════════════════════════════════════════
-          TYPOGRAPHIC STATEMENT
-      ══════════════════════════════════════════ */}
-      <section className="py-28 md:py-40 px-6 md:px-16 flex items-center justify-center text-center">
-        <blockquote
-          className="font-cormorant italic font-semibold text-foreground/90 leading-[1.05] tracking-[-0.01em] max-w-5xl"
-          style={{ fontSize: "clamp(2.4rem, 6.5vw, 6rem)" }}
-        >
-          &ldquo;The cocktail is not a drink.
-          <br />
-          <em className="not-italic text-gold">It is a course.</em>&rdquo;
-        </blockquote>
-      </section>
 
       {/* ══════════════════════════════════════════
           SERVICES
