@@ -187,7 +187,7 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════ */}
-      <footer className="border-t border-white/6 px-6 md:px-16 pt-14 pb-10">
+      <footer className="border-t border-white/6 px-6 md:px-16 pt-14 pb-28 md:pb-10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:justify-between gap-10 mb-14">
             <div>
@@ -205,14 +205,14 @@ export default function Home() {
               </p>
               <a
                 href={`tel:${phone}`}
-                className="link-hover font-inter text-xs text-[var(--muted-light)] hover:text-gold transition-colors"
+                className="inline-block py-2 font-inter text-xs text-[var(--muted-light)] hover:text-gold transition-colors touch-manipulation"
               >
                 Call Now →
               </a>
-              <div className="mt-4">
+              <div className="mt-2">
                 <Link
                   href="/contact"
-                  className="font-inter text-xs text-gold hover:text-[#d4b05f] transition-colors"
+                  className="inline-block py-2 font-inter text-xs text-gold hover:text-[#d4b05f] transition-colors touch-manipulation"
                 >
                   Submit an Inquiry →
                 </Link>
