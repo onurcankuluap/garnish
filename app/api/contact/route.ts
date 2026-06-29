@@ -66,75 +66,114 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const formattedDate = eventDate
+    ? new Date(eventDate + "T12:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : eventDate;
+
+  const submittedAt = new Date().toLocaleString("en-US", {
+    timeZone: "America/New_York",
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+
+  const replyHref = email
+    ? `mailto:${email}?subject=Re%3A%20Your%20Garnish%20Inquiry&body=Hi%20${encodeURIComponent(name.split(" ")[0])}%2C%0A%0AThank%20you%20for%20reaching%20out%20to%20Garnish.%20I%E2%80%99d%20love%20to%20discuss%20your%20event%20on%20${encodeURIComponent(formattedDate)}.%0A%0A`
+    : `tel:${phone}`;
+
   const emailHtml = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <style>
-    body { background: #0a0a0a; color: #f0ece4; font-family: Georgia, serif; margin: 0; padding: 0; }
-    .container { max-width: 600px; margin: 0 auto; padding: 40px 24px; }
-    .header { border-bottom: 1px solid #c9a84c; padding-bottom: 24px; margin-bottom: 32px; }
-    .brand { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a84c; margin-bottom: 8px; }
-    h1 { font-size: 28px; font-weight: 600; margin: 0; color: #f0ece4; }
-    .call-out { background: #c9a84c; color: #0a0a0a; padding: 16px 20px; margin-bottom: 32px; font-family: Arial, sans-serif; font-size: 14px; font-weight: 600; }
-    .field { margin-bottom: 20px; }
-    .field-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #6b6b6b; font-family: Arial, sans-serif; margin-bottom: 4px; }
-    .field-value { font-size: 16px; color: #f0ece4; }
-    .divider { height: 1px; background: #1f1f1f; margin: 24px 0; }
-    .footer { font-size: 11px; color: #6b6b6b; font-family: Arial, sans-serif; margin-top: 40px; border-top: 1px solid #1f1f1f; padding-top: 24px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <p class="brand">Garnish</p>
-      <h1>New Inquiry from ${name}</h1>
-    </div>
+<body style="margin:0;padding:0;background:#0f0f0f;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f0f;padding:40px 16px;">
+    <tr><td align="center">
+      <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;">
 
-    <div class="call-out">
-      📞 Call them at: ${phone}
-    </div>
+        <!-- Header -->
+        <tr><td style="padding-bottom:32px;border-bottom:1px solid #c9a84c;">
+          <p style="margin:0 0 6px;font-size:10px;letter-spacing:0.35em;text-transform:uppercase;color:#c9a84c;">Garnish</p>
+          <h1 style="margin:0;font-size:26px;font-weight:600;color:#f0ece4;font-family:Georgia,serif;line-height:1.2;">New Inquiry</h1>
+          <p style="margin:6px 0 0;font-size:13px;color:#888;letter-spacing:0.02em;">from ${name}</p>
+        </td></tr>
 
-    <div class="field">
-      <div class="field-label">Full Name</div>
-      <div class="field-value">${name}</div>
-    </div>
-    <div class="field">
-      <div class="field-label">Phone Number</div>
-      <div class="field-value">${phone}</div>
-    </div>
-    ${email ? `<div class="field"><div class="field-label">Email</div><div class="field-value">${email}</div></div>` : ""}
+        <!-- Action buttons -->
+        <tr><td style="padding:28px 0 24px;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-right:12px;">
+                <a href="tel:${phone}" style="display:inline-block;background:#c9a84c;color:#0a0a0a;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:14px 24px;">
+                  Call ${name.split(" ")[0]} →
+                </a>
+              </td>
+              ${email ? `<td>
+                <a href="${replyHref}" style="display:inline-block;background:transparent;color:#c9a84c;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;padding:13px 24px;border:1px solid #c9a84c;">
+                  Reply by Email →
+                </a>
+              </td>` : ""}
+            </tr>
+          </table>
+        </td></tr>
 
-    <div class="divider"></div>
+        <!-- Contact info -->
+        <tr><td style="background:#161616;padding:24px;margin-bottom:2px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="50%" style="padding-bottom:20px;vertical-align:top;">
+                <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Full Name</p>
+                <p style="margin:0;font-size:15px;color:#f0ece4;">${name}</p>
+              </td>
+              <td width="50%" style="padding-bottom:20px;vertical-align:top;">
+                <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Phone</p>
+                <p style="margin:0;font-size:15px;color:#f0ece4;">${phone}</p>
+              </td>
+            </tr>
+            ${email ? `<tr><td colspan="2">
+              <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Email</p>
+              <p style="margin:0;font-size:15px;color:#f0ece4;">${email}</p>
+            </td></tr>` : ""}
+          </table>
+        </td></tr>
 
-    <div class="field">
-      <div class="field-label">Type of Event</div>
-      <div class="field-value">${eventType}</div>
-    </div>
-    <div class="field">
-      <div class="field-label">Event Date</div>
-      <div class="field-value">${eventDate}</div>
-    </div>
-    <div class="field">
-      <div class="field-label">Estimated Guests</div>
-      <div class="field-value">${guestCount}</div>
-    </div>
+        <!-- Spacer -->
+        <tr><td style="height:2px;background:#0f0f0f;"></td></tr>
 
-    ${
-      details
-        ? `<div class="divider"></div>
-    <div class="field">
-      <div class="field-label">Additional Details</div>
-      <div class="field-value" style="white-space:pre-wrap;">${details}</div>
-    </div>`
-        : ""
-    }
+        <!-- Event info -->
+        <tr><td style="background:#161616;padding:24px;">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="33%" style="padding-bottom:20px;vertical-align:top;">
+                <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Event Type</p>
+                <p style="margin:0;font-size:15px;color:#f0ece4;">${eventType}</p>
+              </td>
+              <td width="33%" style="padding-bottom:20px;vertical-align:top;">
+                <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Event Date</p>
+                <p style="margin:0;font-size:15px;color:#c9a84c;font-family:Georgia,serif;">${formattedDate}</p>
+              </td>
+              <td width="33%" style="padding-bottom:20px;vertical-align:top;">
+                <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Guests</p>
+                <p style="margin:0;font-size:15px;color:#f0ece4;">${guestCount}</p>
+              </td>
+            </tr>
+            ${details ? `<tr><td colspan="3" style="border-top:1px solid #222;padding-top:20px;">
+              <p style="margin:0 0 4px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#555;">Additional Details</p>
+              <p style="margin:0;font-size:14px;color:#ccc;line-height:1.7;white-space:pre-wrap;">${details}</p>
+            </td></tr>` : ""}
+          </table>
+        </td></tr>
 
-    <div class="footer">
-      Submitted via garnish.info &bull; ${new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" })} ET
-    </div>
-  </div>
+        <!-- Footer -->
+        <tr><td style="padding-top:28px;border-top:1px solid #1f1f1f;margin-top:28px;">
+          <p style="margin:0;font-size:10px;color:#444;letter-spacing:0.05em;">
+            Submitted via garnish.info &nbsp;&bull;&nbsp; ${submittedAt} ET
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
 </body>
 </html>
   `.trim();
