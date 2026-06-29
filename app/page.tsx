@@ -1,5 +1,6 @@
 import Link from "next/link";
 import HeroVideo from "@/components/HeroVideo";
+import GarnishLogo from "@/components/GarnishLogo";
 
 const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
 
@@ -275,14 +276,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-10 mb-14">
             <div>
-              <div className="flex flex-col leading-none mb-4">
-                <span className="font-cormorant text-2xl font-semibold tracking-[0.18em] uppercase flex items-center gap-2">
-                  <span className="text-gold text-base">✦</span>
-                  Garnish
-                </span>
-                <span className="font-inter text-[9px] tracking-[0.28em] uppercase text-[var(--muted)] mt-1 ml-5">
-                  Private Bartending
-                </span>
+              <div className="mb-4">
+                <GarnishLogo scale={0.9} />
               </div>
               <p className="font-inter text-xs text-[var(--muted)] leading-[1.8] max-w-[220px]">
                 Bespoke cocktail service for private events — crafted with care, served with intention.

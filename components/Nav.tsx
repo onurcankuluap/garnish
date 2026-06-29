@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import GarnishLogo from "@/components/GarnishLogo";
 
 const navLinks: { label: string; href: string }[] = [];
 
@@ -15,15 +16,7 @@ export default function Nav() {
       <div className="max-w-7xl mx-auto px-6 md:px-10 h-[72px] flex items-center justify-between">
 
         {/* ── Wordmark ── */}
-        <Link href="/" className="flex flex-col leading-none group">
-          <span className="font-cormorant text-[22px] font-semibold tracking-[0.18em] text-foreground uppercase flex items-center gap-2">
-            <span className="text-gold text-base leading-none">✦</span>
-            Garnish
-          </span>
-          <span className="font-inter text-[9px] tracking-[0.28em] uppercase text-[var(--muted-light)] mt-0.5 ml-5">
-            Private Bartending
-          </span>
-        </Link>
+        <GarnishLogo scale={1} />
 
         {/* ── Desktop nav ── */}
         <nav className="hidden md:flex items-center gap-8">
