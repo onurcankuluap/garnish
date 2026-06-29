@@ -34,8 +34,9 @@ const eventTypes = [
   "Other",
 ];
 
+// text-base (16px) on mobile prevents iOS auto-zoom; sm:text-sm on larger screens
 const field =
-  "w-full bg-transparent border-b border-white/12 text-foreground font-inter text-sm py-3 outline-none focus:border-gold transition-colors duration-200 placeholder:text-[var(--muted)]";
+  "w-full bg-transparent border-b border-white/12 text-foreground font-inter text-base sm:text-sm py-3 outline-none focus:border-gold transition-colors duration-200 placeholder:text-[var(--muted)]";
 
 const label =
   "block font-inter text-[9px] tracking-[0.28em] uppercase text-[var(--muted)] mb-2";
@@ -66,6 +67,7 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (status === "loading") return;
     setStatus("loading");
     setErrorMsg("");
 
@@ -125,7 +127,7 @@ export default function ContactForm() {
 
   /* ── Form ── */
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-7">
 
       {/* Honeypot — hidden from real users */}
       <div className="hidden" aria-hidden="true">
@@ -140,7 +142,7 @@ export default function ContactForm() {
       </div>
 
       {/* Name + Phone */}
-      <div className="grid sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
         <div>
           <label className={label}>
             Full Name <span className="text-gold">*</span>
@@ -152,6 +154,7 @@ export default function ContactForm() {
             className={field}
             value={form.name}
             onChange={set("name")}
+            autoComplete="name"
           />
         </div>
         <div>
@@ -165,6 +168,7 @@ export default function ContactForm() {
             className={field}
             value={form.phone}
             onChange={set("phone")}
+            autoComplete="tel"
           />
         </div>
       </div>
@@ -180,11 +184,12 @@ export default function ContactForm() {
           className={field}
           value={form.email}
           onChange={set("email")}
+          autoComplete="email"
         />
       </div>
 
       {/* Event type + Date */}
-      <div className="grid sm:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
         <div>
           <label className={label}>
             Type of Event <span className="text-gold">*</span>
@@ -205,10 +210,7 @@ export default function ContactForm() {
           <label className={label}>
             Event Date <span className="text-gold">*</span>
           </label>
-          <div
-            className="relative cursor-pointer"
-            onClick={() => dateRef.current?.showPicker()}
-          >
+          <div className="relative">
             <input
               ref={dateRef}
               type="date"
@@ -217,6 +219,12 @@ export default function ContactForm() {
               value={form.eventDate}
               onChange={set("eventDate")}
               min={new Date().toISOString().split("T")[0]}
+              onClick={() => {
+                // showPicker() only on desktop — mobile opens natively on tap
+                if (window.matchMedia("(pointer: fine)").matches) {
+                  dateRef.current?.showPicker?.();
+                }
+              }}
             />
             <svg
               className="absolute right-0 bottom-3 pointer-events-none text-[var(--muted)]"
@@ -241,6 +249,7 @@ export default function ContactForm() {
           type="number"
           required
           min="1"
+          inputMode="numeric"
           placeholder="e.g. 60"
           className={field}
           value={form.guestCount}
@@ -269,12 +278,12 @@ export default function ContactForm() {
         </p>
       )}
 
-      {/* Submit */}
-      <div className="pt-2">
+      {/* Submit — min-h-[48px] ensures adequate touch target on mobile */}
+      <div className="pt-2 pb-24 sm:pb-2">
         <button
           type="submit"
           disabled={status === "loading"}
-          className="group inline-flex items-center gap-3 px-10 py-3.5 bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto group inline-flex items-center justify-center gap-3 px-10 min-h-[48px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
         >
           {status === "loading" ? "Sending…" : "Send Inquiry"}
           {status !== "loading" && (

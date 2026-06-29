@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 type Message = {
@@ -85,6 +86,7 @@ const greeting: Message = {
 };
 
 export default function BartenderWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([greeting]);
   const [input, setInput] = useState("");
@@ -123,6 +125,9 @@ export default function BartenderWidget() {
   function handleKey(e: React.KeyboardEvent) {
     if (e.key === "Enter") send(input);
   }
+
+  // Hide on contact page — widget would cover the submit button on mobile
+  if (pathname === "/contact") return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
