@@ -7,13 +7,13 @@ export const metadata = {
   description:
     "Hire a private bartender for your wedding, party, or corporate event in Delaware, Philadelphia, or DC. Submit an inquiry and Onur will call you back within 24 hours.",
   alternates: {
-    canonical: "https://www.garnishbar.com/contact",
+    canonical: "https://www.garnish.info/contact",
   },
   openGraph: {
     title: "Book a Private Bartender | Garnish",
     description:
       "Hire a private bartender for your next event. Serving Rehoboth Beach DE, Philadelphia & DC. Inquiry takes 2 minutes.",
-    url: "https://www.garnishbar.com/contact",
+    url: "https://www.garnish.info/contact",
   },
 };
 

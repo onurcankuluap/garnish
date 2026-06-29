@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 type FormData = {
   name: string;
@@ -40,10 +41,24 @@ const label =
   "block font-inter text-[9px] tracking-[0.28em] uppercase text-[var(--muted)] mb-2";
 
 export default function ContactForm() {
+  const router = useRouter();
+  const dateRef = useRef<HTMLInputElement>(null);
   const [form,        setForm]        = useState<FormData>(initialForm);
   const [status,      setStatus]      = useState<"idle"|"loading"|"success"|"error">("idle");
   const [errorMsg,    setErrorMsg]    = useState("");
   const [successName, setSuccessName] = useState("");
+  const [countdown,   setCountdown]   = useState(5);
+
+  useEffect(() => {
+    if (status !== "success") return;
+    const interval = setInterval(() => {
+      setCountdown((n) => {
+        if (n <= 1) { clearInterval(interval); router.push("/"); }
+        return n - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [status, router]);
 
   const set = (f: keyof FormData) =>
     (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>) =>
@@ -83,9 +98,27 @@ export default function ContactForm() {
         <h2 className="font-cormorant text-4xl md:text-5xl font-semibold text-foreground leading-tight mb-5">
           Thank you{successName ? `, ${successName}` : ""}.
         </h2>
-        <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
+        <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8] mb-10">
           I&apos;ll be in touch shortly to discuss your event.
         </p>
+        <div className="flex items-center gap-4">
+          <svg className="text-gold" width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <circle cx="14" cy="14" r="13" stroke="currentColor" strokeWidth="1"/>
+            <circle
+              cx="14" cy="14" r="13"
+              stroke="#c9a84c"
+              strokeWidth="1.5"
+              strokeDasharray={`${(2 * Math.PI * 13 * countdown) / 5} ${2 * Math.PI * 13}`}
+              strokeDashoffset={2 * Math.PI * 13 * 0.25}
+              strokeLinecap="round"
+              style={{ transition: "stroke-dasharray 1s linear", transform: "rotate(-90deg)", transformOrigin: "center" }}
+            />
+            <text x="14" y="18" textAnchor="middle" fill="#c9a84c" fontSize="10" fontFamily="system-ui">{countdown}</text>
+          </svg>
+          <span className="font-inter text-[10px] tracking-[0.2em] uppercase text-[var(--muted)]">
+            Returning to home…
+          </span>
+        </div>
       </div>
     );
   }
@@ -172,13 +205,30 @@ export default function ContactForm() {
           <label className={label}>
             Event Date <span className="text-gold">*</span>
           </label>
-          <input
-            type="date"
-            required
-            className={`${field} cursor-pointer`}
-            value={form.eventDate}
-            onChange={set("eventDate")}
-          />
+          <div
+            className="relative cursor-pointer"
+            onClick={() => dateRef.current?.showPicker()}
+          >
+            <input
+              ref={dateRef}
+              type="date"
+              required
+              className={`${field} cursor-pointer pr-8`}
+              value={form.eventDate}
+              onChange={set("eventDate")}
+              min={new Date().toISOString().split("T")[0]}
+            />
+            <svg
+              className="absolute right-0 bottom-3 pointer-events-none text-[var(--muted)]"
+              width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
         </div>
       </div>
 

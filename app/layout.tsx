@@ -16,7 +16,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const BASE_URL = "https://www.garnishbar.com";
+const BASE_URL = "https://www.garnish.info";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

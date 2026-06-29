@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = "https://www.garnishbar.com";
+const BASE_URL = "https://www.garnish.info";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
