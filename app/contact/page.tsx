@@ -3,8 +3,18 @@ import ContactForm from "@/components/ContactForm";
 const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
 
 export const metadata = {
-  title: "Book an Event — Garnish",
-  description: "Submit an inquiry and I'll call you back within 24 hours.",
+  title: "Book a Private Bartender — Inquire",
+  description:
+    "Hire a private bartender for your wedding, party, or corporate event in Delaware, Philadelphia, or DC. Submit an inquiry and Onur will call you back within 24 hours.",
+  alternates: {
+    canonical: "https://www.garnishbar.com/contact",
+  },
+  openGraph: {
+    title: "Book a Private Bartender | Garnish",
+    description:
+      "Hire a private bartender for your next event. Serving Rehoboth Beach DE, Philadelphia & DC. Inquiry takes 2 minutes.",
+    url: "https://www.garnishbar.com/contact",
+  },
 };
 
 export default function ContactPage() {
@@ -50,8 +60,16 @@ export default function ContactPage() {
           </div>
 
           {/* Bottom ornament */}
-          <div className="hidden md:flex items-center gap-3 mt-16 opacity-20">
-            <span className="font-cormorant text-6xl text-gold font-semibold leading-none">✦</span>
+          <div className="hidden md:block mt-16 opacity-20">
+            <svg width="28" height="36" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M3 8 L29 8 Q27 20 16 28 Q5 20 3 8 Z" stroke="#c9a84c" strokeWidth="1" strokeLinejoin="round" fill="rgba(201,168,76,0.05)"/>
+              <line x1="16" y1="28" x2="16" y2="36" stroke="#c9a84c" strokeWidth="1" strokeLinecap="round"/>
+              <line x1="9" y1="36" x2="23" y2="36" stroke="#c9a84c" strokeWidth="1" strokeLinecap="round"/>
+              <circle cx="27" cy="6.5" r="3.8" stroke="#c9a84c" strokeWidth="0.7" fill="none"/>
+              <line x1="27" y1="2.7" x2="27" y2="10.3" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
+              <line x1="23.5" y1="4.6" x2="30.5" y2="8.4" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
+              <line x1="23.5" y1="8.4" x2="30.5" y2="4.6" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
+            </svg>
           </div>
         </aside>
 

@@ -6,23 +6,6 @@ const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 
-const services = [
-  {
-    n: "01",
-    title: "Weddings",
-    desc: "Your wedding bar should feel effortless. I handle every pour — from the welcome toast to the last nightcap — so you stay present for every moment that matters.",
-  },
-  {
-    n: "02",
-    title: "Private Parties",
-    desc: "Each menu is written for the room. Composed cocktails, seasonal ingredients, and a presence that makes the gathering feel considered.",
-  },
-  {
-    n: "03",
-    title: "Corporate Events",
-    desc: "The bar is often the first thing guests remember. I make sure what they remember is worth talking about.",
-  },
-];
 
 const marqueeItems = [
   "Craft Cocktails",
@@ -42,6 +25,10 @@ export default function Home() {
 
   return (
     <main className="overflow-x-hidden">
+      {/* Hidden H1 for crawlers — visible heading is in the hero below */}
+      <h1 className="sr-only">
+        Private Bartender for Hire — Rehoboth Beach, Delaware | Garnish
+      </h1>
 
       {/* ══════════════════════════════════════════
           HERO
@@ -65,7 +52,7 @@ export default function Home() {
             {/* Booking badge */}
             <span className="hidden sm:inline-flex items-center gap-1.5 border border-gold/30 px-3 py-1 font-inter text-[9px] tracking-[0.2em] uppercase text-gold/70 ml-2">
               <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
-              Now Booking 2025
+              Now Booking 2026
             </span>
           </div>
 
@@ -114,91 +101,55 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           MARQUEE STRIP
       ══════════════════════════════════════════ */}
-      <div className="border-y border-white/6 py-4 overflow-hidden">
-        <div className="marquee-track flex whitespace-nowrap">
+      <div className="border-y border-white/6 py-5 marquee-outer">
+        <div className="marquee-track flex whitespace-nowrap items-center">
           {marquee.map((item, i) => (
-            <span key={i} className="inline-flex items-center gap-6 px-6">
-              <span className="font-cormorant text-lg italic text-[var(--muted-light)]">
+            <span key={i} className="inline-flex items-center gap-8 px-8">
+              <span className="font-inter text-[11px] tracking-[0.28em] uppercase text-[var(--muted)]">
                 {item}
               </span>
-              <span className="text-gold text-xs">✦</span>
+              {/* Mini coupe glass separator */}
+              <svg width="13" height="18" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="opacity-60 flex-shrink-0">
+                <path d="M3 8 L29 8 Q27 20 16 28 Q5 20 3 8 Z" stroke="#c9a84c" strokeWidth="1.5" strokeLinejoin="round" fill="rgba(201,168,76,0.08)"/>
+                <line x1="16" y1="28" x2="16" y2="36" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1="9" y1="36" x2="23" y2="36" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
+                <circle cx="27" cy="6.5" r="3.8" stroke="#c9a84c" strokeWidth="1" fill="none"/>
+                <line x1="27" y1="2.7" x2="27" y2="10.3" stroke="#c9a84c" strokeWidth="0.8" strokeLinecap="round"/>
+                <line x1="23.5" y1="4.6" x2="30.5" y2="8.4" stroke="#c9a84c" strokeWidth="0.8" strokeLinecap="round"/>
+                <line x1="23.5" y1="8.4" x2="30.5" y2="4.6" stroke="#c9a84c" strokeWidth="0.8" strokeLinecap="round"/>
+              </svg>
             </span>
           ))}
         </div>
       </div>
 
       {/* ══════════════════════════════════════════
-          SERVICES
-      ══════════════════════════════════════════ */}
-      <section id="services" className="py-28 px-6 md:px-16 border-t border-white/6">
-        <div className="max-w-7xl mx-auto">
-
-          <div className="flex items-center gap-6 mb-20">
-            <div className="w-8 h-px bg-gold" />
-            <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
-              What I Offer
-            </span>
-          </div>
-
-          <div className="divide-y divide-white/6">
-            {services.map((s) => (
-              <div
-                key={s.n}
-                className="group py-10 grid md:grid-cols-[80px_1fr_2fr] gap-4 md:gap-10 items-start hover:pl-3 transition-all duration-500"
-              >
-                <span className="font-inter text-[10px] tracking-[0.2em] text-[var(--muted)] pt-1">
-                  {s.n}
-                </span>
-                <h3 className="font-cormorant text-2xl md:text-3xl font-semibold text-foreground group-hover:text-gold transition-colors duration-300">
-                  {s.title}
-                </h3>
-                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.9]">
-                  {s.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
-          PHILOSOPHY (replaces "How It Works")
+          PROCESS
       ══════════════════════════════════════════ */}
       <section id="process" className="py-28 px-6 md:px-16 bg-[#0d0d0d] border-t border-white/6">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 md:gap-24 items-start">
+        <div className="max-w-7xl mx-auto">
 
-          {/* Left: manifesto */}
-          <div>
-            <div className="flex items-center gap-6 mb-12">
-              <div className="w-8 h-px bg-gold" />
-              <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
-                The Craft
-              </span>
-            </div>
-
-            <h2
-              className="font-cormorant font-semibold text-foreground leading-[1.05] mb-10"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
-            >
-              Nothing is left to<br />
-              <em className="not-italic text-gold">chance.</em>
-            </h2>
-
-            <div className="space-y-6 font-inter text-sm text-[var(--muted-light)] leading-[1.9] max-w-md">
-              <p>
-                Every menu is composed weeks before your event. Ingredients are sourced seasonally, spirits chosen deliberately, and each cocktail built around the rhythm of the evening — not just a list of drinks.
-              </p>
-              <p>
-                I arrive early. I leave late. Between those hours, I make sure every guest feels like the bar was designed specifically for them.
-              </p>
-              <p>
-                This is not a service. It is a collaboration — between the host, the occasion, and the glass.
-              </p>
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-20">
+            <div>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-8 h-px bg-gold" />
+                <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
+                  How It Works
+                </span>
+              </div>
+              <h2
+                className="font-cormorant font-semibold text-foreground leading-[1.0]"
+                style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}
+              >
+                Three steps to<br />
+                <em className="not-italic text-gold">an unforgettable bar.</em>
+              </h2>
             </div>
           </div>
 
-          {/* Right: process steps */}
-          <div className="space-y-0 divide-y divide-white/6">
+          {/* Steps — horizontal on desktop */}
+          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
             {[
               {
                 n: "01",
@@ -216,18 +167,16 @@ export default function Home() {
                 desc: "I arrive ahead of schedule, set up without a fuss, and pour every drink like it is the first one of the night.",
               },
             ].map((step) => (
-              <div key={step.n} className="py-8 flex gap-8 group">
-                <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/25 w-9 h-9 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:border-gold/60 transition-colors duration-300">
+              <div key={step.n} className="py-10 md:py-0 md:px-12 first:md:pl-0 last:md:pr-0 group">
+                <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/25 w-9 h-9 inline-flex items-center justify-center mb-7 group-hover:border-gold/60 transition-colors duration-300">
                   {step.n}
                 </span>
-                <div>
-                  <h3 className="font-cormorant text-xl font-semibold text-foreground mb-2">
-                    {step.title}
-                  </h3>
-                  <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
-                    {step.desc}
-                  </p>
-                </div>
+                <h3 className="font-cormorant text-2xl font-semibold text-foreground mb-3">
+                  {step.title}
+                </h3>
+                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.9]">
+                  {step.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -236,45 +185,11 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
-          CTA BAND
-      ══════════════════════════════════════════ */}
-      <section className="py-28 px-6 md:px-16 border-t border-white/6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-10">
-          <div>
-            <p className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold mb-4">
-              Ready to begin?
-            </p>
-            <h2
-              className="font-cormorant font-semibold text-foreground leading-tight"
-              style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
-            >
-              Let&rsquo;s make your<br />event unforgettable.
-            </h2>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
-            <Link
-              href="/contact"
-              className="group inline-flex items-center justify-center gap-3 px-10 py-4 bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] transition-colors duration-200"
-            >
-              Book an Event
-              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
-            </Link>
-            <a
-              href={`tel:${phone}`}
-              className="inline-flex items-center justify-center gap-3 px-10 py-4 border border-white/15 text-foreground font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:border-gold hover:text-gold transition-all duration-200"
-            >
-              Call Now
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════ */}
       <footer className="border-t border-white/6 px-6 md:px-16 pt-14 pb-10">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-10 mb-14">
+          <div className="flex flex-col md:flex-row md:justify-between gap-10 mb-14">
             <div>
               <div className="mb-4">
                 <GarnishLogo scale={0.9} />
@@ -282,26 +197,6 @@ export default function Home() {
               <p className="font-inter text-xs text-[var(--muted)] leading-[1.8] max-w-[220px]">
                 Bespoke cocktail service for private events — crafted with care, served with intention.
               </p>
-            </div>
-
-            <div>
-              <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-5">
-                Navigation
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { label: "Book an Event", href: "/contact" },
-                ].map((l) => (
-                  <li key={l.href}>
-                    <Link
-                      href={l.href}
-                      className="link-hover font-inter text-xs text-[var(--muted-light)] hover:text-foreground transition-colors"
-                    >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <div>

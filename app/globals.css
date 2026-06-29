@@ -76,8 +76,40 @@
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
-.marquee-track { animation: marquee 28s linear infinite; }
-.marquee-track:hover { animation-play-state: paused; }
+
+.marquee-outer {
+  overflow: hidden;
+  /* Fade to transparent on both edges */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  animation: marquee 36s linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover — intentional interaction signal */
+.marquee-outer:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Respect reduced-motion system preference */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
 
 /* ─── Utilities ──────────────────────────────────────────────── */
 

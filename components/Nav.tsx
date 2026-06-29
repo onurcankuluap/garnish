@@ -1,41 +1,31 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GarnishLogo from "@/components/GarnishLogo";
-
-const navLinks: { label: string; href: string }[] = [];
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-transparent py-2"
+      className={`fixed top-0 left-0 right-0 z-50 py-2 transition-all duration-300 ${
+        scrolled
+          ? "bg-[#0a0a0a]/85 backdrop-blur-md border-b border-white/6"
+          : "bg-transparent"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-10 h-[72px] flex items-center justify-between">
 
         {/* ── Wordmark ── */}
         <GarnishLogo scale={1} />
-
-        {/* ── Desktop nav ── */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="link-hover font-inter text-xs tracking-[0.18em] uppercase text-[var(--muted-light)] hover:text-foreground transition-colors duration-200"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <Link
-            href="/contact"
-            className="ml-4 px-6 py-2.5 border border-gold text-gold font-inter text-xs font-semibold tracking-[0.18em] uppercase hover:bg-gold hover:text-[#0a0a0a] transition-all duration-200"
-          >
-            Book an Event
-          </Link>
-        </nav>
 
         {/* ── Mobile hamburger ── */}
         <button
@@ -65,20 +55,10 @@ export default function Nav() {
         } bg-[#0a0a0a]`}
       >
         <div className="px-6 py-6 flex flex-col gap-5">
-          {navLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className="font-inter text-xs tracking-[0.2em] uppercase text-[var(--muted-light)]"
-            >
-              {l.label}
-            </Link>
-          ))}
           <Link
             href="/contact"
             onClick={() => setOpen(false)}
-            className="mt-2 px-6 py-3 border border-gold text-gold font-inter text-xs font-semibold tracking-[0.18em] uppercase text-center hover:bg-gold hover:text-[#0a0a0a] transition-all duration-200"
+            className="font-inter text-xs tracking-[0.2em] uppercase text-[var(--muted-light)]"
           >
             Book an Event
           </Link>
