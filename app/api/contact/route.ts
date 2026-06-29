@@ -132,7 +132,7 @@ export async function POST(req: NextRequest) {
     }
 
     <div class="footer">
-      Submitted via theprivatebar.com &bull; ${new Date().toUTCString()}
+      Submitted via garnish.info &bull; ${new Date().toLocaleString("en-US", { timeZone: "America/New_York", dateStyle: "long", timeStyle: "short" })} ET
     </div>
   </div>
 </body>
