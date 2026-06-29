@@ -4,7 +4,9 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(pkill -f \"next dev\")",
       "Bash(~/.nvm/versions/node/v18.20.8/bin/node --version)",
-      "Bash(chmod +x /Users/onurcankulualp/bartender_website/dev.sh)"
+      "Bash(chmod +x /Users/onurcankulualp/bartender_website/dev.sh)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

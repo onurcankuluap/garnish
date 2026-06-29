@@ -72,6 +72,13 @@
 
 .scroll-pulse { animation: scrollPulse 2s ease-in-out infinite; }
 
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 28s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
 /* ─── Utilities ──────────────────────────────────────────────── */
 
 .gold-line {

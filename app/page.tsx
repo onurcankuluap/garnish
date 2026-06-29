@@ -8,41 +8,36 @@ const services = [
   {
     n: "01",
     title: "Weddings",
-    desc: "A wedding bar should feel effortless. I handle everything — from the welcome toast to the last nightcap — so you stay present for every moment.",
+    desc: "Your wedding bar should feel effortless. I handle every pour — from the welcome toast to the last nightcap — so you stay present for every moment that matters.",
   },
   {
     n: "02",
     title: "Private Parties",
-    desc: "Craft cocktails, personalised menus, and a presence that elevates the room. For gatherings where the details matter.",
+    desc: "Each menu is written for the room. Composed cocktails, seasonal ingredients, and a presence that makes the gathering feel considered.",
   },
   {
     n: "03",
     title: "Corporate Events",
-    desc: "First impressions last. I bring polished, professional bar service that reflects your brand and leaves guests talking.",
+    desc: "The bar is often the first thing guests remember. I make sure what they remember is worth talking about.",
   },
 ];
 
-const steps = [
-  {
-    n: "01",
-    title: "Tell me about your event",
-    desc: "A two-minute form — date, guest count, and the vibe you're going for. Nothing more.",
-  },
-  {
-    n: "02",
-    title: "We talk through the details",
-    desc: "I call you back personally within 24 hours. We'll discuss drinks, timing, setup — everything.",
-  },
-  {
-    n: "03",
-    title: "I take care of the rest",
-    desc: "I arrive early, set up beautifully, and deliver an experience your guests will remember.",
-  },
+const marqueeItems = [
+  "Craft Cocktails",
+  "Weddings",
+  "Private Parties",
+  "Corporate Events",
+  "Dinner Parties",
+  "Seasonal Menus",
+  "Birthdays",
+  "Bespoke Service",
 ];
 
 /* ─── Page ─────────────────────────────────────────────────────── */
 
 export default function Home() {
+  const marquee = [...marqueeItems, ...marqueeItems]; // doubled for seamless loop
+
   return (
     <main className="overflow-x-hidden">
 
@@ -51,14 +46,9 @@ export default function Home() {
       ══════════════════════════════════════════ */}
       <section className="relative min-h-screen flex flex-col justify-end px-6 md:px-16 pb-16 md:pb-20 pt-32">
 
-        {/* Radial glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_30%_55%,rgba(201,168,76,0.07)_0%,transparent_70%)] pointer-events-none" />
-
-        {/* Vertical accent — desktop only */}
         <div className="hidden md:block absolute left-16 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#c9a84c]/20 to-transparent pointer-events-none" />
-
-        {/* Large ghost year — decorative */}
-        <span className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2 font-cormorant text-[220px] font-semibold leading-none text-white/[0.025] select-none pointer-events-none">
+        <span className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2 font-cormorant text-[220px] font-semibold leading-none text-white/[0.022] select-none pointer-events-none">
           BAR
         </span>
 
@@ -68,22 +58,29 @@ export default function Home() {
           <div className="anim-fade-up flex items-center gap-4 mb-10">
             <div className="w-10 h-px bg-gold" />
             <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
-              Exclusively Private
+              Private Bartending
+            </span>
+            {/* Booking badge */}
+            <span className="hidden sm:inline-flex items-center gap-1.5 border border-gold/30 px-3 py-1 font-inter text-[9px] tracking-[0.2em] uppercase text-gold/70 ml-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
+              Now Booking 2025
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="anim-fade-up-1 font-cormorant font-semibold leading-[0.88] tracking-[-0.01em] text-foreground mb-10"
-              style={{ fontSize: "clamp(3.2rem, 10vw, 9rem)" }}>
+          <h1
+            className="anim-fade-up-1 font-cormorant font-semibold leading-[0.88] tracking-[-0.01em] text-foreground mb-10"
+            style={{ fontSize: "clamp(3.2rem, 10vw, 9rem)" }}
+          >
             The Art of<br />
             <em className="not-italic text-gold">Private</em><br />
             Bartending.
           </h1>
 
-          {/* Bottom row: subtext + CTAs */}
+          {/* Bottom row */}
           <div className="anim-fade-up-2 flex flex-col md:flex-row md:items-end gap-8 md:gap-20">
             <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8] max-w-xs">
-              Bespoke cocktail experiences for discerning hosts. Every event crafted with precision, poured with intention.
+              Every glass is a composition. Every event, a performance. Nothing improvised — everything intentional.
             </p>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
@@ -113,12 +110,41 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
+          MARQUEE STRIP
+      ══════════════════════════════════════════ */}
+      <div className="border-y border-white/6 py-4 overflow-hidden">
+        <div className="marquee-track flex whitespace-nowrap">
+          {marquee.map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-6 px-6">
+              <span className="font-cormorant text-lg italic text-[var(--muted-light)]">
+                {item}
+              </span>
+              <span className="text-gold text-xs">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════
+          TYPOGRAPHIC STATEMENT
+      ══════════════════════════════════════════ */}
+      <section className="py-28 md:py-40 px-6 md:px-16 flex items-center justify-center text-center">
+        <blockquote
+          className="font-cormorant italic font-semibold text-foreground/90 leading-[1.05] tracking-[-0.01em] max-w-5xl"
+          style={{ fontSize: "clamp(2.4rem, 6.5vw, 6rem)" }}
+        >
+          &ldquo;The cocktail is not a drink.
+          <br />
+          <em className="not-italic text-gold">It is a course.</em>&rdquo;
+        </blockquote>
+      </section>
+
+      {/* ══════════════════════════════════════════
           SERVICES
       ══════════════════════════════════════════ */}
-      <section id="services" className="py-28 px-6 md:px-16">
+      <section id="services" className="py-28 px-6 md:px-16 border-t border-white/6">
         <div className="max-w-7xl mx-auto">
 
-          {/* Section label */}
           <div className="flex items-center gap-6 mb-20">
             <div className="w-8 h-px bg-gold" />
             <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
@@ -126,17 +152,11 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Pull quote */}
-          <p className="font-cormorant text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground/80 italic leading-tight max-w-3xl mb-20">
-            &ldquo;Every detail considered.<br />Every guest remembered.&rdquo;
-          </p>
-
-          {/* Service list */}
-          <div className="divide-y divide-white/8">
+          <div className="divide-y divide-white/6">
             {services.map((s) => (
               <div
                 key={s.n}
-                className="group py-10 grid md:grid-cols-[80px_1fr_2fr] gap-4 md:gap-10 items-start hover:pl-2 transition-all duration-300"
+                className="group py-10 grid md:grid-cols-[80px_1fr_2fr] gap-4 md:gap-10 items-start hover:pl-3 transition-all duration-500"
               >
                 <span className="font-inter text-[10px] tracking-[0.2em] text-[var(--muted)] pt-1">
                   {s.n}
@@ -144,7 +164,7 @@ export default function Home() {
                 <h3 className="font-cormorant text-2xl md:text-3xl font-semibold text-foreground group-hover:text-gold transition-colors duration-300">
                   {s.title}
                 </h3>
-                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
+                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.9]">
                   {s.desc}
                 </p>
               </div>
@@ -154,38 +174,66 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
-          PROCESS
+          PHILOSOPHY (replaces "How It Works")
       ══════════════════════════════════════════ */}
-      <section id="process" className="py-28 px-6 md:px-16 bg-[#0d0d0d]">
-        <div className="max-w-7xl mx-auto">
+      <section id="process" className="py-28 px-6 md:px-16 bg-[#0d0d0d] border-t border-white/6">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 md:gap-24 items-start">
 
-          {/* Section label */}
-          <div className="flex items-center gap-6 mb-20">
-            <div className="w-8 h-px bg-gold" />
-            <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
-              How It Works
-            </span>
+          {/* Left: manifesto */}
+          <div>
+            <div className="flex items-center gap-6 mb-12">
+              <div className="w-8 h-px bg-gold" />
+              <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
+                The Craft
+              </span>
+            </div>
+
+            <h2
+              className="font-cormorant font-semibold text-foreground leading-[1.05] mb-10"
+              style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}
+            >
+              Nothing is left to<br />
+              <em className="not-italic text-gold">chance.</em>
+            </h2>
+
+            <div className="space-y-6 font-inter text-sm text-[var(--muted-light)] leading-[1.9] max-w-md">
+              <p>
+                Every menu is composed weeks before your event. Ingredients are sourced seasonally, spirits chosen deliberately, and each cocktail built around the rhythm of the evening — not just a list of drinks.
+              </p>
+              <p>
+                I arrive early. I leave late. Between those hours, I make sure every guest feels like the bar was designed specifically for them.
+              </p>
+              <p>
+                This is not a service. It is a collaboration — between the host, the occasion, and the glass.
+              </p>
+            </div>
           </div>
 
-          {/* Steps */}
-          <div className="grid md:grid-cols-3 gap-0">
-            {steps.map((step, i) => (
-              <div key={step.n} className="relative group">
-                {/* Connector line between steps */}
-                {i < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-[18px] left-[calc(50%+24px)] right-0 h-px bg-gradient-to-r from-gold/30 to-transparent" />
-                )}
-
-                <div className="pr-0 md:pr-12 pb-12 md:pb-0">
-                  {/* Number + line */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/30 w-9 h-9 flex items-center justify-center flex-shrink-0">
-                      {step.n}
-                    </span>
-                    <div className="flex-1 h-px bg-white/8 md:hidden" />
-                  </div>
-
-                  <h3 className="font-cormorant text-xl md:text-2xl font-semibold text-foreground mb-3 leading-snug">
+          {/* Right: process steps */}
+          <div className="space-y-0 divide-y divide-white/6">
+            {[
+              {
+                n: "01",
+                title: "Tell me about your event",
+                desc: "A short form — date, guests, the feeling you're after. Nothing more than two minutes.",
+              },
+              {
+                n: "02",
+                title: "We talk through the details",
+                desc: "I call you personally within 24 hours. We discuss drinks, pacing, setup — until it feels right.",
+              },
+              {
+                n: "03",
+                title: "I take care of everything",
+                desc: "I arrive ahead of schedule, set up without a fuss, and pour every drink like it is the first one of the night.",
+              },
+            ].map((step) => (
+              <div key={step.n} className="py-8 flex gap-8 group">
+                <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/25 w-9 h-9 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:border-gold/60 transition-colors duration-300">
+                  {step.n}
+                </span>
+                <div>
+                  <h3 className="font-cormorant text-xl font-semibold text-foreground mb-2">
                     {step.title}
                   </h3>
                   <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
@@ -195,6 +243,7 @@ export default function Home() {
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
@@ -207,7 +256,10 @@ export default function Home() {
             <p className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold mb-4">
               Ready to begin?
             </p>
-            <h2 className="font-cormorant text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground leading-tight">
+            <h2
+              className="font-cormorant font-semibold text-foreground leading-tight"
+              style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+            >
               Let&rsquo;s make your<br />event unforgettable.
             </h2>
           </div>
@@ -234,10 +286,7 @@ export default function Home() {
       ══════════════════════════════════════════ */}
       <footer className="border-t border-white/6 px-6 md:px-16 pt-14 pb-10">
         <div className="max-w-7xl mx-auto">
-
-          {/* Top row */}
           <div className="grid md:grid-cols-3 gap-10 mb-14">
-            {/* Brand */}
             <div>
               <div className="flex flex-col leading-none mb-4">
                 <span className="font-cormorant text-2xl font-semibold tracking-[0.18em] uppercase flex items-center gap-2">
@@ -249,19 +298,16 @@ export default function Home() {
                 </span>
               </div>
               <p className="font-inter text-xs text-[var(--muted)] leading-[1.8] max-w-[220px]">
-                Bespoke cocktail service for private events — crafted with care, served with style.
+                Bespoke cocktail service for private events — crafted with care, served with intention.
               </p>
             </div>
 
-            {/* Links */}
             <div>
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-5">
                 Navigation
               </p>
               <ul className="space-y-3">
                 {[
-                  { label: "Services",   href: "/#services" },
-                  { label: "Process",    href: "/#process"  },
                   { label: "Book an Event", href: "/contact" },
                 ].map((l) => (
                   <li key={l.href}>
@@ -276,7 +322,6 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Contact */}
             <div>
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-5">
                 Get in Touch
@@ -298,7 +343,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bottom row */}
           <div className="border-t border-white/6 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <p className="font-inter text-[10px] text-[var(--muted)]">
               &copy; {new Date().getFullYear()} Garnish. All rights reserved.
