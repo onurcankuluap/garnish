@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "garnish",
+      "runtimeExecutable": "/Users/onurcankulualp/bartender_website/dev.sh",
+      "runtimeArgs": [],
+      "port": 3002,
+      "autoPort": false
+    }
+  ]
+}

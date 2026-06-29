@@ -10,7 +10,7 @@ type FormData = {
   eventDate: string;
   guestCount: string;
   details: string;
-  honeypot: string; // bot trap — never shown to users
+  honeypot: string;
 };
 
 const initialForm: FormData = {
@@ -33,20 +33,21 @@ const eventTypes = [
   "Other",
 ];
 
-const inputClass =
-  "w-full bg-[#0a0a0a] border border-white/15 text-foreground font-inter text-sm px-4 py-3 outline-none focus:border-gold transition-colors placeholder:text-muted";
+const field =
+  "w-full bg-transparent border-b border-white/12 text-foreground font-inter text-sm py-3 outline-none focus:border-gold transition-colors duration-200 placeholder:text-[var(--muted)]";
 
-const labelClass = "block font-inter text-xs tracking-wider uppercase text-muted mb-2";
+const label =
+  "block font-inter text-[9px] tracking-[0.28em] uppercase text-[var(--muted)] mb-2";
 
 export default function ContactForm() {
-  const [form, setForm] = useState<FormData>(initialForm);
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMsg, setErrorMsg] = useState("");
+  const [form,        setForm]        = useState<FormData>(initialForm);
+  const [status,      setStatus]      = useState<"idle"|"loading"|"success"|"error">("idle");
+  const [errorMsg,    setErrorMsg]    = useState("");
   const [successName, setSuccessName] = useState("");
 
-  const set = (field: keyof FormData) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => setForm((f) => ({ ...f, [field]: e.target.value }));
+  const set = (f: keyof FormData) =>
+    (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [f]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +55,7 @@ export default function ContactForm() {
     setErrorMsg("");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res  = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -74,27 +75,28 @@ export default function ContactForm() {
     }
   };
 
+  /* ── Success state ── */
   if (status === "success") {
     return (
-      <div className="text-center py-16">
-        <div className="w-12 h-px bg-gold mx-auto mb-8" />
-        <h2 className="font-cormorant text-3xl font-semibold text-foreground mb-4">
-          Thanks{successName ? `, ${successName}` : ""}
+      <div className="flex flex-col items-start justify-center h-full py-10">
+        <div className="w-12 h-px bg-gold mb-10" />
+        <h2 className="font-cormorant text-4xl md:text-5xl font-semibold text-foreground leading-tight mb-5">
+          Thank you{successName ? `, ${successName}` : ""}.
         </h2>
-        <p className="font-inter text-muted text-sm leading-relaxed">
-          I&apos;ll be in touch shortly.
+        <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
+          I&apos;ll be in touch shortly to discuss your event.
         </p>
       </div>
     );
   }
 
+  /* ── Form ── */
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Honeypot — hidden from real users, filled by bots */}
+    <form onSubmit={handleSubmit} className="space-y-8">
+
+      {/* Honeypot — hidden from real users */}
       <div className="hidden" aria-hidden="true">
-        <label htmlFor="website">Website</label>
         <input
-          id="website"
           name="website"
           type="text"
           tabIndex={-1}
@@ -104,132 +106,132 @@ export default function ContactForm() {
         />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-6">
+      {/* Name + Phone */}
+      <div className="grid sm:grid-cols-2 gap-8">
         <div>
-          <label htmlFor="name" className={labelClass}>
+          <label className={label}>
             Full Name <span className="text-gold">*</span>
           </label>
           <input
-            id="name"
             type="text"
             required
             placeholder="Jane Smith"
-            className={inputClass}
+            className={field}
             value={form.name}
             onChange={set("name")}
           />
         </div>
         <div>
-          <label htmlFor="phone" className={labelClass}>
-            Phone Number <span className="text-gold">*</span>
+          <label className={label}>
+            Phone <span className="text-gold">*</span>
           </label>
           <input
-            id="phone"
             type="tel"
             required
             placeholder="+1 (555) 000-0000"
-            className={inputClass}
+            className={field}
             value={form.phone}
             onChange={set("phone")}
           />
         </div>
       </div>
 
+      {/* Email */}
       <div>
-        <label htmlFor="email" className={labelClass}>
-          Email Address <span className="text-muted normal-case">(optional)</span>
+        <label className={label}>
+          Email <span className="text-[var(--muted)] normal-case tracking-normal">— optional</span>
         </label>
         <input
-          id="email"
           type="email"
           placeholder="jane@example.com"
-          className={inputClass}
+          className={field}
           value={form.email}
           onChange={set("email")}
         />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-6">
+      {/* Event type + Date */}
+      <div className="grid sm:grid-cols-2 gap-8">
         <div>
-          <label htmlFor="eventType" className={labelClass}>
+          <label className={label}>
             Type of Event <span className="text-gold">*</span>
           </label>
           <select
-            id="eventType"
             required
-            className={`${inputClass} cursor-pointer`}
+            className={`${field} cursor-pointer`}
             value={form.eventType}
             onChange={set("eventType")}
           >
-            <option value="" disabled>
-              Select event type
-            </option>
+            <option value="" disabled>Select…</option>
             {eventTypes.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
+              <option key={t} value={t} className="bg-[#0a0a0a]">{t}</option>
             ))}
           </select>
         </div>
         <div>
-          <label htmlFor="eventDate" className={labelClass}>
+          <label className={label}>
             Event Date <span className="text-gold">*</span>
           </label>
           <input
-            id="eventDate"
             type="date"
             required
-            className={`${inputClass} cursor-pointer`}
+            className={`${field} cursor-pointer`}
             value={form.eventDate}
             onChange={set("eventDate")}
           />
         </div>
       </div>
 
+      {/* Guest count */}
       <div>
-        <label htmlFor="guestCount" className={labelClass}>
-          Estimated Number of Guests <span className="text-gold">*</span>
+        <label className={label}>
+          Estimated Guests <span className="text-gold">*</span>
         </label>
         <input
-          id="guestCount"
           type="number"
           required
           min="1"
-          placeholder="e.g. 50"
-          className={inputClass}
+          placeholder="e.g. 60"
+          className={field}
           value={form.guestCount}
           onChange={set("guestCount")}
         />
       </div>
 
+      {/* Details */}
       <div>
-        <label htmlFor="details" className={labelClass}>
-          Additional Details or Requests{" "}
-          <span className="text-muted normal-case">(optional)</span>
+        <label className={label}>
+          Additional Details <span className="text-[var(--muted)] normal-case tracking-normal">— optional</span>
         </label>
         <textarea
-          id="details"
-          rows={5}
-          placeholder="Tell me about your event, theme, preferred drinks, or any special requests..."
-          className={`${inputClass} resize-none`}
+          rows={4}
+          placeholder="Venue, theme, preferred drinks, special requests…"
+          className={`${field} resize-none`}
           value={form.details}
           onChange={set("details")}
         />
       </div>
 
+      {/* Error */}
       {status === "error" && (
-        <p className="font-inter text-sm text-red-400 bg-red-400/10 border border-red-400/20 px-4 py-3">
+        <p className="font-inter text-xs text-red-400/90 border-l-2 border-red-400/50 pl-4 py-1">
           {errorMsg}
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="w-full sm:w-auto px-10 py-3.5 bg-gold text-[#0a0a0a] font-inter font-semibold text-sm tracking-widest uppercase hover:bg-[#d4b05f] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        {status === "loading" ? "Sending…" : "Send Inquiry"}
-      </button>
+      {/* Submit */}
+      <div className="pt-2">
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="group inline-flex items-center gap-3 px-10 py-3.5 bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {status === "loading" ? "Sending…" : "Send Inquiry"}
+          {status !== "loading" && (
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+          )}
+        </button>
+      </div>
     </form>
   );
 }
