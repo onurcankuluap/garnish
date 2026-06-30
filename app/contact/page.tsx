@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import ContactForm from "@/components/ContactForm";
 
 const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
@@ -75,7 +76,9 @@ export default function ContactPage() {
 
         {/* ── Right panel (form) ── */}
         <div className="py-2 md:py-24 md:pl-16">
-          <ContactForm />
+          <Suspense fallback={null}>
+            <ContactForm />
+          </Suspense>
         </div>
 
       </div>
