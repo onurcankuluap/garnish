@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
   const eventDate = sanitize(body.eventDate);
   const guestCount = sanitize(body.guestCount);
   const details = sanitize(body.details);
+  const plan = sanitize(body.plan);
 
   if (!name || !phone || !eventType || !eventDate || !guestCount) {
     return NextResponse.json(
@@ -116,6 +117,18 @@ export async function POST(req: NextRequest) {
             </tr>
           </table>
         </td></tr>
+
+        ${plan ? `<!-- Selected plan -->
+        <tr><td style="padding-bottom:2px;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#1a1508;border:1px solid #c9a84c;padding:16px 24px;">
+            <tr>
+              <td>
+                <p style="margin:0 0 2px;font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:#c9a84c;">Selected Plan</p>
+                <p style="margin:0;font-size:18px;font-family:Georgia,serif;color:#c9a84c;font-weight:600;">${plan}</p>
+              </td>
+            </tr>
+          </table>
+        </td></tr>` : ""}
 
         <!-- Contact info -->
         <tr><td style="background:#161616;padding:24px;margin-bottom:2px;">
@@ -184,7 +197,7 @@ export async function POST(req: NextRequest) {
       from: "Garnish <onboarding@resend.dev>",
       to: ADMIN_EMAIL,
       replyTo: email || undefined,
-      subject: `New Inquiry from ${name}`,
+      subject: plan ? `New Inquiry from ${name} — ${plan} Plan` : `New Inquiry from ${name}`,
       html: emailHtml,
     });
 

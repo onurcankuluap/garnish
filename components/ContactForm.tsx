@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type FormData = {
   name: string;
@@ -11,6 +11,7 @@ type FormData = {
   eventDate: string;
   guestCount: string;
   details: string;
+  plan: string;
   honeypot: string;
 };
 
@@ -22,6 +23,7 @@ const initialForm: FormData = {
   eventDate: "",
   guestCount: "",
   details: "",
+  plan: "",
   honeypot: "",
 };
 
@@ -43,8 +45,12 @@ const label =
 
 export default function ContactForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const dateRef = useRef<HTMLInputElement>(null);
-  const [form,        setForm]        = useState<FormData>(initialForm);
+  const [form,        setForm]        = useState<FormData>({
+    ...initialForm,
+    plan: searchParams.get("plan") ?? "",
+  });
   const [status,      setStatus]      = useState<"idle"|"loading"|"success"|"error">("idle");
   const [errorMsg,    setErrorMsg]    = useState("");
   const [successName, setSuccessName] = useState("");
@@ -139,6 +145,34 @@ export default function ContactForm() {
           value={form.honeypot}
           onChange={set("honeypot")}
         />
+      </div>
+
+      {/* Selected plan */}
+      <div>
+        <label className={label}>Selected Plan</label>
+        {form.plan ? (
+          <div className="flex items-center gap-3 py-3 border-b border-white/12">
+            <span className="font-inter text-base sm:text-sm text-gold font-semibold">{form.plan}</span>
+            <button
+              type="button"
+              onClick={() => setForm((p) => ({ ...p, plan: "" }))}
+              className="font-inter text-[10px] text-[var(--muted)] hover:text-foreground transition-colors underline"
+            >
+              change
+            </button>
+          </div>
+        ) : (
+          <select
+            className={`${field} cursor-pointer`}
+            value={form.plan}
+            onChange={set("plan")}
+          >
+            <option value="">No specific plan — just inquiring</option>
+            <option value="Basic" className="bg-[#0a0a0a]">Basic — Starting at $75/hr</option>
+            <option value="Standard" className="bg-[#0a0a0a]">Standard — Starting at $110/hr</option>
+            <option value="Bartender+DJ" className="bg-[#0a0a0a]">Bartender + DJ — Starting at $160/hr</option>
+          </select>
+        )}
       </div>
 
       {/* Name + Phone */}

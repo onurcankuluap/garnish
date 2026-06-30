@@ -215,7 +215,7 @@ export default function Home() {
             <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Basic</p>
               <div className="mb-1">
-                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $75</span>
                 <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
               </div>
               <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
@@ -235,7 +235,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link
-                href="/contact"
+                href="/contact?plan=Basic"
                 className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
               >
                 Book Now →
@@ -249,7 +249,7 @@ export default function Home() {
                 <span className="font-inter text-[8px] tracking-[0.2em] uppercase text-[#0a0a0a] bg-gold px-2.5 py-1">Most Popular</span>
               </div>
               <div className="mb-1">
-                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $110</span>
                 <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
               </div>
               <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
@@ -269,7 +269,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link
-                href="/contact"
+                href="/contact?plan=Standard"
                 className="inline-flex items-center gap-2 px-6 min-h-[44px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.18em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
               >
                 Book Now →
@@ -280,7 +280,7 @@ export default function Home() {
             <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Bartender + DJ</p>
               <div className="mb-1">
-                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $160</span>
                 <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
               </div>
               <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
@@ -299,7 +299,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link
-                href="/contact"
+                href="/contact?plan=Bartender+DJ"
                 className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
               >
                 Book Now →
