@@ -185,6 +185,146 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════
+          PRICING
+      ══════════════════════════════════════════ */}
+      <section className="px-6 md:px-16 py-24 md:py-32">
+        <div className="max-w-7xl mx-auto">
+
+          {/* Header */}
+          <div className="mb-16">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-8 h-px bg-gold" />
+              <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">Pricing</span>
+            </div>
+            <h2
+              className="font-cormorant font-semibold text-foreground leading-[1.0] mb-5"
+              style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}
+            >
+              Built around<br />
+              <em className="not-italic text-gold">your event.</em>
+            </h2>
+            <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8] max-w-lg">
+              Every event is different — here&apos;s a starting point. Reach out for a custom quote tailored to your guest count and occasion.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+
+            {/* Basic */}
+            <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
+              <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Basic</p>
+              <div className="mb-1">
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
+              </div>
+              <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
+                + additional hourly rate for parties over 50 guests
+              </p>
+              <div className="h-px bg-white/6 mb-8" />
+              <ul className="space-y-4 mb-10">
+                {[
+                  "Professional bartender for your event",
+                  "Hourly flat-rate service",
+                  "Standard bar setup",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 font-inter text-sm text-[var(--muted-light)] leading-[1.6]">
+                    <span className="text-gold mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
+              >
+                Book Now →
+              </Link>
+            </div>
+
+            {/* Standard — featured */}
+            <div className="group relative bg-[#141414] border border-gold/60 p-8 md:scale-[1.03] md:-translate-y-2 hover:md:-translate-y-3 transition-transform duration-300 shadow-[0_0_40px_rgba(201,168,76,0.08)]">
+              <div className="flex items-center justify-between mb-6">
+                <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)]">Standard</p>
+                <span className="font-inter text-[8px] tracking-[0.2em] uppercase text-[#0a0a0a] bg-gold px-2.5 py-1">Most Popular</span>
+              </div>
+              <div className="mb-1">
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
+              </div>
+              <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
+                Everything in Basic, plus custom cocktail planning
+              </p>
+              <div className="h-px bg-white/6 mb-8" />
+              <ul className="space-y-4 mb-10">
+                {[
+                  "Everything in Basic",
+                  "2 custom cocktails designed around your taste",
+                  "Dietary restrictions & allergies accommodated",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 font-inter text-sm text-[var(--muted-light)] leading-[1.6]">
+                    <span className="text-gold mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 min-h-[44px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.18em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
+              >
+                Book Now →
+              </Link>
+            </div>
+
+            {/* Bartender + DJ */}
+            <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
+              <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Bartender + DJ</p>
+              <div className="mb-1">
+                <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $XX</span>
+                <span className="font-inter text-xs text-[var(--muted)] ml-1">/hr</span>
+              </div>
+              <p className="font-inter text-[11px] text-[var(--muted)] leading-[1.7] mb-8">
+                The full experience
+              </p>
+              <div className="h-px bg-white/6 mb-8" />
+              <ul className="space-y-4 mb-10">
+                {[
+                  "Everything in Standard",
+                  "Personalized cocktail menu creation",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-3 font-inter text-sm text-[var(--muted-light)] leading-[1.6]">
+                    <span className="text-gold mt-0.5 flex-shrink-0">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
+              >
+                Book Now →
+              </Link>
+            </div>
+
+          </div>
+
+          {/* Footer note */}
+          <div className="mt-14 pt-10 border-t border-white/6 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <p className="font-inter text-xs text-[var(--muted)] leading-[1.8] max-w-xl">
+              Final pricing depends on guest count, event length, location, and specific requests. Fill out the contact form or call directly for an accurate quote.
+            </p>
+            <Link
+              href="/contact"
+              className="flex-shrink-0 inline-flex items-center gap-2 px-8 min-h-[44px] border border-gold/40 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-gold hover:border-gold hover:bg-gold/5 transition-all duration-200 touch-manipulation"
+            >
+              Get a Custom Quote →
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
           FOOTER
       ══════════════════════════════════════════ */}
       <footer className="border-t border-white/6 px-6 md:px-16 pt-14 pb-28 md:pb-10">
