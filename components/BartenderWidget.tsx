@@ -95,11 +95,23 @@ export default function BartenderWidget() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [footerVisible, setFooterVisible] = useState(false);
 
   useEffect(() => {
     const show = setTimeout(() => setBubble(true), 2000);
     const hide = setTimeout(() => setBubble(false), 7000);
     return () => { clearTimeout(show); clearTimeout(hide); };
+  }, []);
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(footer);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -130,7 +142,7 @@ export default function BartenderWidget() {
   if (pathname === "/contact") return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className={`fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 transition-opacity duration-300 ${footerVisible && !open ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
 
       {/* ── Chat window ── */}
       <div
