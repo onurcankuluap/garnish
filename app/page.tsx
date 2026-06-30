@@ -197,25 +197,24 @@ export default function Home() {
               <p className="font-inter text-xs text-[var(--muted)] leading-[1.8] max-w-[220px]">
                 Bespoke cocktail service for private events — crafted with care, served with intention.
               </p>
-            </div>
-
-            <div>
-              <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-5">
-                Get in Touch
-              </p>
-              <a
-                href={`tel:${phone}`}
-                className="inline-block py-2 font-inter text-xs text-[var(--muted-light)] hover:text-gold transition-colors touch-manipulation"
-              >
-                Call Now →
-              </a>
-              <div className="mt-2">
-                <Link
-                  href="/contact"
-                  className="inline-block py-2 font-inter text-xs text-gold hover:text-[#d4b05f] transition-colors touch-manipulation"
+              <div className="mt-8">
+                <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-4">
+                  Get in Touch
+                </p>
+                <a
+                  href={`tel:${phone}`}
+                  className="inline-block py-2 font-inter text-xs text-[var(--muted-light)] hover:text-gold transition-colors touch-manipulation"
                 >
-                  Submit an Inquiry →
-                </Link>
+                  Call Now →
+                </a>
+                <div className="mt-2">
+                  <Link
+                    href="/contact"
+                    className="inline-block py-2 font-inter text-xs text-gold hover:text-[#d4b05f] transition-colors touch-manipulation"
+                  >
+                    Submit an Inquiry →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
