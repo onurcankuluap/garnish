@@ -119,7 +119,9 @@ export default function BartenderWidget() {
   }, [messages, typing]);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 320);
+    if (!open) return;
+    const t = setTimeout(() => inputRef.current?.focus(), 320);
+    return () => clearTimeout(t);
   }, [open]);
 
   function send(text: string) {
