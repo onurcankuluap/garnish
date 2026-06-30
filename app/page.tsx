@@ -124,67 +124,6 @@ export default function Home() {
       </div>
 
       {/* ══════════════════════════════════════════
-          PROCESS
-      ══════════════════════════════════════════ */}
-      <section id="process" className="py-28 px-6 md:px-16 bg-[#0d0d0d] border-t border-white/6">
-        <div className="max-w-7xl mx-auto">
-
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-20">
-            <div>
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-8 h-px bg-gold" />
-                <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
-                  How It Works
-                </span>
-              </div>
-              <h2
-                className="font-cormorant font-semibold text-foreground leading-[1.0]"
-                style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}
-              >
-                Three steps to<br />
-                <em className="not-italic text-gold">an unforgettable bar.</em>
-              </h2>
-            </div>
-          </div>
-
-          {/* Steps — horizontal on desktop */}
-          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
-            {[
-              {
-                n: "01",
-                title: "Tell me about your event",
-                desc: "A short form — date, guests, the feeling you're after. Nothing more than two minutes.",
-              },
-              {
-                n: "02",
-                title: "We talk through the details",
-                desc: "I call you personally within 24 hours. We discuss drinks, pacing, setup — until it feels right.",
-              },
-              {
-                n: "03",
-                title: "I take care of everything",
-                desc: "I arrive ahead of schedule, set up without a fuss, and pour every drink like it is the first one of the night.",
-              },
-            ].map((step) => (
-              <div key={step.n} className="py-10 md:py-0 md:px-12 first:md:pl-0 last:md:pr-0 group">
-                <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/25 w-9 h-9 inline-flex items-center justify-center mb-7 group-hover:border-gold/60 transition-colors duration-300">
-                  {step.n}
-                </span>
-                <h3 className="font-cormorant text-2xl font-semibold text-foreground mb-3">
-                  {step.title}
-                </h3>
-                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.9]">
-                  {step.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════
           PRICING
       ══════════════════════════════════════════ */}
       <section className="px-6 md:px-16 py-24 md:py-32">
@@ -319,6 +258,65 @@ export default function Home() {
             >
               Get a Custom Quote →
             </Link>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════
+          PROCESS
+      ══════════════════════════════════════════ */}
+      <section id="process" className="py-28 px-6 md:px-16 bg-[#0d0d0d] border-t border-white/6">
+        <div className="max-w-7xl mx-auto">
+
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-20">
+            <div>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="w-8 h-px bg-gold" />
+                <span className="font-inter text-[10px] tracking-[0.35em] uppercase text-gold">
+                  How It Works
+                </span>
+              </div>
+              <h2
+                className="font-cormorant font-semibold text-foreground leading-[1.0]"
+                style={{ fontSize: "clamp(2rem, 4vw, 3.25rem)" }}
+              >
+                Three steps to<br />
+                <em className="not-italic text-gold">an unforgettable bar.</em>
+              </h2>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/6">
+            {[
+              {
+                n: "01",
+                title: "Tell me about your event",
+                desc: "A short form — date, guests, the feeling you're after. Nothing more than two minutes.",
+              },
+              {
+                n: "02",
+                title: "We talk through the details",
+                desc: "I call you personally within 24 hours. We discuss drinks, pacing, setup — until it feels right.",
+              },
+              {
+                n: "03",
+                title: "I take care of everything",
+                desc: "I arrive ahead of schedule, set up without a fuss, and pour every drink like it is the first one of the night.",
+              },
+            ].map((step) => (
+              <div key={step.n} className="py-10 md:py-0 md:px-12 first:md:pl-0 last:md:pr-0 group">
+                <span className="font-inter text-[10px] tracking-[0.2em] text-gold border border-gold/25 w-9 h-9 inline-flex items-center justify-center mb-7 group-hover:border-gold/60 transition-colors duration-300">
+                  {step.n}
+                </span>
+                <h3 className="font-cormorant text-2xl font-semibold text-foreground mb-3">
+                  {step.title}
+                </h3>
+                <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.9]">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
           </div>
 
         </div>
