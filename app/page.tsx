@@ -74,14 +74,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-3 px-8 py-3.5 bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] transition-colors duration-200"
+                className="group inline-flex items-center gap-3 px-8 min-h-[48px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
               >
                 Book an Event
                 <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </Link>
               <a
                 href={`tel:${phone}`}
-                className="inline-flex items-center gap-3 px-8 py-3.5 border border-white/15 text-foreground font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:border-gold hover:text-gold transition-all duration-200"
+                className="inline-flex items-center gap-3 px-8 min-h-[48px] border border-white/15 text-foreground font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:border-gold hover:text-gold active:text-gold transition-all duration-200 touch-manipulation"
               >
                 Call Now
               </a>
