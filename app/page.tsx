@@ -175,7 +175,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/contact?plan=Basic"
-                className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 min-h-[48px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold active:border-gold active:text-gold transition-all duration-200 touch-manipulation"
               >
                 Book Now →
               </Link>
@@ -209,7 +209,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/contact?plan=Standard"
-                className="inline-flex items-center gap-2 px-6 min-h-[44px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.18em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 min-h-[48px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.18em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
               >
                 Book Now →
               </Link>
@@ -239,7 +239,7 @@ export default function Home() {
               </ul>
               <Link
                 href="/contact?plan=Bartender+DJ"
-                className="inline-flex items-center gap-2 px-6 min-h-[44px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold transition-all duration-200 touch-manipulation"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 min-h-[48px] border border-white/15 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-foreground hover:border-gold hover:text-gold active:border-gold active:text-gold transition-all duration-200 touch-manipulation"
               >
                 Book Now →
               </Link>
@@ -254,7 +254,7 @@ export default function Home() {
             </p>
             <Link
               href="/contact"
-              className="flex-shrink-0 inline-flex items-center gap-2 px-8 min-h-[44px] border border-gold/40 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-gold hover:border-gold hover:bg-gold/5 transition-all duration-200 touch-manipulation"
+              className="flex-shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 min-h-[48px] border border-gold/40 font-inter text-xs font-semibold tracking-[0.18em] uppercase text-gold hover:border-gold hover:bg-gold/5 active:bg-gold/10 transition-all duration-200 touch-manipulation"
             >
               Get a Custom Quote →
             </Link>
