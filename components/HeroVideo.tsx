@@ -25,13 +25,13 @@ export default function HeroVideo() {
       </video>
 
       {/* Dark overlay — keeps text readable */}
-      <div className="absolute inset-0 bg-[#0a0a0a]/70" />
+      <div className="absolute inset-0 bg-[#0a0a0a]/70 pointer-events-none" />
 
       {/* Fade to solid at the bottom so sections below blend cleanly */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none" />
 
       {/* Subtle vignette on the sides */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#0a0a0a_100%)] opacity-60" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#0a0a0a_100%)] opacity-60 pointer-events-none" />
     </div>
   );
 }
