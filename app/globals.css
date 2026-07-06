@@ -64,11 +64,11 @@
   50%       { transform: translateY(6px); opacity: 0.8; }
 }
 
-.anim-fade-up   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
-.anim-fade-up-1 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.12s forwards; }
-.anim-fade-up-2 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.24s forwards; }
-.anim-fade-up-3 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.36s forwards; }
-.anim-fade-in   { animation: fadeIn 1.2s ease 0.1s forwards; }
+.anim-fade-up   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-fade-up-1 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.12s both; }
+.anim-fade-up-2 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.24s both; }
+.anim-fade-up-3 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.36s both; }
+.anim-fade-in   { animation: fadeIn 1.2s ease 0.1s both; }
 
 .scroll-pulse { animation: scrollPulse 2s ease-in-out infinite; }
 
@@ -109,6 +109,10 @@
 /* Respect reduced-motion system preference */
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
+  .anim-fade-up, .anim-fade-up-1, .anim-fade-up-2, .anim-fade-up-3, .anim-fade-in {
+    animation: none;
+  }
+  .scroll-pulse { animation: none; }
 }
 
 /* ─── Utilities ──────────────────────────────────────────────── */

@@ -104,6 +104,9 @@ export default function BartenderWidget() {
   }, []);
 
   useEffect(() => {
+    // Re-query the footer on every route change — client-side navigation
+    // replaces the DOM node, which would leave a stale observer
+    setFooterVisible(false);
     const footer = document.querySelector("footer");
     if (!footer) return;
     const observer = new IntersectionObserver(
@@ -112,7 +115,7 @@ export default function BartenderWidget() {
     );
     observer.observe(footer);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -144,7 +147,7 @@ export default function BartenderWidget() {
   if (pathname === "/contact") return null;
 
   return (
-    <div className={`fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 transition-opacity duration-300 ${footerVisible && !open ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+    <div className={`fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 transition-opacity duration-300 pointer-events-none ${footerVisible && !open ? "opacity-0" : "opacity-100"}`}>
 
       {/* ── Chat window ── */}
       <div
@@ -154,7 +157,7 @@ export default function BartenderWidget() {
             : "opacity-0 scale-95 translate-y-3 pointer-events-none"
         }`}
       >
-        <div className="w-80 bg-[#0f0f0f] border border-white/10 shadow-2xl flex flex-col overflow-hidden"
+        <div className="w-80 max-w-[calc(100vw-3rem)] bg-[#0f0f0f] border border-white/10 shadow-2xl flex flex-col overflow-hidden"
           style={{ height: 440 }}>
 
           {/* Header */}
@@ -286,7 +289,7 @@ export default function BartenderWidget() {
 
       {/* ── Speech bubble ── */}
       <div
-        className={`flex items-center gap-3 transition-all duration-500 ${
+        className={`hidden sm:flex items-center gap-3 transition-all duration-500 ${
           bubble && !open
             ? "opacity-100 translate-y-0 pointer-events-auto"
             : "opacity-0 translate-y-1 pointer-events-none"
@@ -320,6 +323,8 @@ export default function BartenderWidget() {
         onClick={() => { setOpen(!open); setBubble(false); }}
         aria-label={open ? "Close chat" : "Chat with Onur"}
         className={`relative w-14 h-14 rounded-full border transition-all duration-300 flex items-center justify-center shadow-2xl ${
+          footerVisible && !open ? "pointer-events-none" : "pointer-events-auto"
+        } ${
           open
             ? "bg-[#141414] border-gold/60"
             : "bg-[#0f0f0f] border-gold/30 hover:border-gold/60 hover:scale-105"

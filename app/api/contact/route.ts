@@ -67,9 +67,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const formattedDate = eventDate
-    ? new Date(eventDate + "T12:00:00").toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-    : eventDate;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(eventDate) || isNaN(Date.parse(eventDate + "T12:00:00"))) {
+    return NextResponse.json(
+      { error: "Please provide a valid event date." },
+      { status: 400 }
+    );
+  }
+
+  if (!/^\d+$/.test(guestCount) || Number(guestCount) < 1) {
+    return NextResponse.json(
+      { error: "Please provide a valid guest count." },
+      { status: 400 }
+    );
+  }
+
+  const formattedDate = new Date(eventDate + "T12:00:00").toLocaleDateString(
+    "en-US",
+    { year: "numeric", month: "long", day: "numeric" }
+  );
 
   const submittedAt = new Date().toLocaleString("en-US", {
     timeZone: "America/New_York",

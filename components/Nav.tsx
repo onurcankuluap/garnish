@@ -29,9 +29,10 @@ export default function Nav() {
 
         {/* ── Mobile hamburger ── */}
         <button
-          className="md:hidden flex flex-col gap-[5px] p-2"
+          className="md:hidden flex flex-col justify-center gap-[5px] min-w-[44px] min-h-[44px] items-center touch-manipulation"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           {[false, true, false].map((isMiddle, i) => (
             <span
@@ -57,8 +58,9 @@ export default function Nav() {
         <div className="px-6 py-6 flex flex-col gap-5">
           <Link
             href="/contact"
+            tabIndex={open ? 0 : -1}
             onClick={() => setOpen(false)}
-            className="font-inter text-xs tracking-[0.2em] uppercase text-[var(--muted-light)]"
+            className="inline-block py-2 font-inter text-xs tracking-[0.2em] uppercase text-[var(--muted-light)] touch-manipulation"
           >
             Book an Event
           </Link>
