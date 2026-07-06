@@ -74,14 +74,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
                 href="/contact"
-                className="group inline-flex items-center gap-3 px-8 min-h-[48px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
+                className="group w-full sm:w-auto justify-center inline-flex items-center gap-3 px-8 min-h-[48px] bg-gold text-[#0a0a0a] font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#d4b05f] active:bg-[#b8923e] transition-colors duration-200 touch-manipulation"
               >
                 Book an Event
                 <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </Link>
               <a
                 href={`tel:${phone}`}
-                className="inline-flex items-center gap-3 px-8 min-h-[48px] border border-white/15 text-foreground font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:border-gold hover:text-gold active:text-gold transition-all duration-200 touch-manipulation"
+                className="w-full sm:w-auto justify-center inline-flex items-center gap-3 px-8 min-h-[48px] border border-white/15 text-foreground font-inter text-xs font-semibold tracking-[0.2em] uppercase hover:border-gold hover:text-gold active:text-gold transition-all duration-200 touch-manipulation"
               >
                 Call Now
               </a>
@@ -151,7 +151,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
 
             {/* Basic */}
-            <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
+            <div className="group relative bg-[#141414] border border-white/8 p-8 md:hover:-translate-y-1 transition-transform duration-300">
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Basic</p>
               <div className="mb-1">
                 <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $75</span>
@@ -182,7 +182,7 @@ export default function Home() {
             </div>
 
             {/* Standard — featured */}
-            <div className="group relative bg-[#141414] border border-gold/60 p-8 md:scale-[1.03] md:-translate-y-2 hover:md:-translate-y-3 transition-transform duration-300 shadow-[0_0_40px_rgba(201,168,76,0.08)]">
+            <div className="group relative bg-[#141414] border border-gold/60 p-8 md:scale-[1.03] md:-translate-y-2 md:hover:-translate-y-3 transition-transform duration-300 shadow-[0_0_40px_rgba(201,168,76,0.08)]">
               <div className="flex items-center justify-between mb-6">
                 <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)]">Standard</p>
                 <span className="font-inter text-[8px] tracking-[0.2em] uppercase text-[#0a0a0a] bg-gold px-2.5 py-1">Most Popular</span>
@@ -216,7 +216,7 @@ export default function Home() {
             </div>
 
             {/* Bartender + DJ */}
-            <div className="group relative bg-[#141414] border border-white/8 p-8 hover:-translate-y-1 transition-transform duration-300">
+            <div className="group relative bg-[#141414] border border-white/8 p-8 md:hover:-translate-y-1 transition-transform duration-300">
               <p className="font-inter text-[9px] tracking-[0.3em] uppercase text-[var(--muted)] mb-6">Bartender + DJ</p>
               <div className="mb-1">
                 <span className="font-cormorant text-4xl font-semibold text-foreground">Starting at $160</span>
