@@ -1,17 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-const WINDOW_MS = 60_000;
-const MAX_REQUESTS = 12;
+/*
+ * Shared Redis connection.
+ *
+ * Vercel created these environment variables:
+ * KV_REST_API_URL
+ * KV_REST_API_TOKEN
+ */
+const redisUrl = process.env.KV_REST_API_URL;
+const redisToken = process.env.KV_REST_API_TOKEN;
 
-const requestLog = new Map<
-  string,
-  {
-    count: number;
-    windowStart: number;
-  }
->();
+if (!redisUrl || !redisToken) {
+  console.warn("Redis rate-limit environment variables are not configured.");
+}
 
-function getClientIp(request: NextRequest) {
+const redis =
+  redisUrl && redisToken
+    ? new Redis({
+        url: redisUrl,
+        token: redisToken,
+      })
+    : null;
+
+/*
+ * Shared distributed rate limiter.
+ *
+ * 12 requests per 60 seconds per client IP.
+ */
+const ratelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(12, "60 s"),
+      analytics: true,
+      prefix: "garnish:chat",
+    })
+  : null;
+
+function getClientIp(request: NextRequest): string {
   const forwardedFor = request.headers.get("x-forwarded-for");
 
   if (forwardedFor) {
@@ -21,42 +48,43 @@ function getClientIp(request: NextRequest) {
   return "unknown";
 }
 
-function isRateLimited(ip: string) {
-  const now = Date.now();
-  const record = requestLog.get(ip);
-
-  if (!record) {
-    requestLog.set(ip, {
-      count: 1,
-      windowStart: now,
-    });
-
-    return false;
-  }
-
-  if (now - record.windowStart > WINDOW_MS) {
-    requestLog.set(ip, {
-      count: 1,
-      windowStart: now,
-    });
-
-    return false;
-  }
-
-  record.count += 1;
-
-  if (record.count > MAX_REQUESTS) {
-    return true;
-  }
-
-  return false;
-}
-
 export async function POST(request: NextRequest) {
   try {
+    /*
+     * -----------------------------
+     * Distributed rate limiting
+     * -----------------------------
+     */
     const ip = getClientIp(request);
 
-    if (isRateLimited(ip)) {
+    if (!ratelimit) {
+      console.error("Redis rate limiter is unavailable.");
+
+      return NextResponse.json(
+        {
+          error: "Chat service is temporarily unavailable",
+        },
+        {
+          status: 503,
+        }
+      );
+    }
+
+    const rateLimitResult = await ratelimit.limit(ip);
+
+    const {
+      success,
+      limit,
+      remaining,
+      reset,
+    } = rateLimitResult;
+
+    if (!success) {
+      const retryAfter = Math.max(
+        1,
+        Math.ceil((reset - Date.now()) / 1000)
+      );
+
       return NextResponse.json(
         {
           error: "Too many requests. Please try again shortly.",
@@ -64,12 +92,20 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
-            "Retry-After": "60",
+            "Retry-After": retryAfter.toString(),
+            "X-RateLimit-Limit": limit.toString(),
+            "X-RateLimit-Remaining": remaining.toString(),
+            "X-RateLimit-Reset": reset.toString(),
           },
         }
       );
     }
 
+    /*
+     * -----------------------------
+     * Parse user input
+     * -----------------------------
+     */
     const body = await request.json();
 
     const message =
@@ -88,6 +124,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    /*
+     * Prevent oversized prompts.
+     */
     if (message.length > 3000) {
       return NextResponse.json(
         {
@@ -99,6 +138,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    /*
+     * -----------------------------
+     * AWS backend
+     * -----------------------------
+     */
     const awsEndpoint = process.env.GARNISH_AI_API_URL;
 
     if (!awsEndpoint) {
@@ -114,26 +158,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    /*
+     * Prevent hanging backend calls.
+     */
     const controller = new AbortController();
 
     const timeout = setTimeout(() => {
       controller.abort();
     }, 10_000);
 
-    const response = await fetch(awsEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message,
-      }),
-      cache: "no-store",
-      signal: controller.signal,
-    });
+    let response: Response;
 
-    clearTimeout(timeout);
+    try {
+      response = await fetch(awsEndpoint, {
+        method: "POST",
 
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          message,
+        }),
+
+        cache: "no-store",
+
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    /*
+     * -----------------------------
+     * AWS backend errors
+     * -----------------------------
+     */
     if (!response.ok) {
       console.error(
         "Garnish AI backend error:",
@@ -152,11 +212,25 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
 
-    return NextResponse.json({
-      reply:
-        data?.reply ||
-        "I'm not sure about that. Please contact Garnish directly.",
-    });
+    /*
+     * -----------------------------
+     * Successful response
+     * -----------------------------
+     */
+    return NextResponse.json(
+      {
+        reply:
+          data?.reply ||
+          "I'm not sure about that. Please contact Garnish directly.",
+      },
+      {
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      }
+    );
   } catch (error) {
     console.error("Chat API error:", error);
 
