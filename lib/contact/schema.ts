@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { MAX_HORIZON_DAYS, addDays, isCalendarDate, todayInBusinessTz } from "./dates";
+import { extras as EXTRAS } from "@/lib/content/facts";
+import { CONTACT_METHODS, HOURS_RANGE, MAX_GUESTS, MAX_LOCATION_CHARS, SOURCES, type ContactMethod } from "./limits";
 
 export const EVENT_TYPES = [
   "Wedding",
@@ -25,7 +27,10 @@ export function normalisePlan(value: unknown): PlanName | "" | null {
   return null;
 }
 
-export const MAX_GUESTS = 2000;
+export { MAX_GUESTS, HOURS_RANGE, CONTACT_METHODS, SOURCES, MAX_LOCATION_CHARS } from "./limits";
+export type { ContactMethod } from "./limits";
+
+const EXTRA_KEYS = new Set<string>(EXTRAS.map((e) => e.key));
 
 // Control characters (except tab/newline handling below) never belong in a field.
 const CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u2028\u2029]/g;
@@ -100,6 +105,63 @@ export function inquirySchema(now: Date = new Date()) {
       }
       return p;
     }),
+
+    // ── Optional fields added for the booking flow (/book). Every one has a
+    //    default, so the /contact form and older clients stay valid as is. ──
+
+    /** Optional start time, "HH:MM" (24 h), in the business timezone. */
+    eventTime: z
+      .union([z.null(), z.string()])
+      .optional()
+      .transform((s) => (s ?? "").trim())
+      .pipe(
+        z.union([
+          z.literal(""),
+          z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, { error: "Please choose a valid time, or leave it blank." }),
+        ])
+      ),
+    /** Town or venue. Required when the booking flow sends it (see refine below). */
+    location: z
+      .union([z.null(), z.string()])
+      .optional()
+      .transform((s) => s ?? "")
+      .pipe(singleLine(MAX_LOCATION_CHARS)),
+    /** Hours of service, in half hours. null when not given. */
+    hours: z
+      .union([z.null(), z.string(), z.number()])
+      .optional()
+      .transform((v, ctx) => {
+        if (v === undefined || v === null || (typeof v === "string" && v.trim() === "")) return null;
+        const n = typeof v === "number" ? v : Number(v.trim());
+        if (!Number.isFinite(n) || n < HOURS_RANGE.min || n > HOURS_RANGE.max || Math.round(n * 2) !== n * 2) {
+          ctx.addIssue({ code: "custom", message: `Choose between ${HOURS_RANGE.min} and ${HOURS_RANGE.max} hours.` });
+          return z.NEVER;
+        }
+        return n;
+      }),
+    /** Requests from the configurator card (facts.ts extras); unknown keys are dropped. */
+    extras: z
+      .union([z.null(), z.array(z.unknown()).max(10, { error: "Too many extras." })])
+      .optional()
+      .transform((a) =>
+        (a ?? []).filter((x, i, all): x is string => typeof x === "string" && EXTRA_KEYS.has(x) && all.indexOf(x) === i)
+      ),
+    contactMethod: z
+      .union([z.null(), z.literal(""), z.enum(CONTACT_METHODS, { error: "Please choose how to reach you." })])
+      .optional()
+      .transform((v) => (v ?? "") as ContactMethod | ""),
+    source: z
+      .union([z.null(), z.enum(SOURCES, { error: "Invalid request." })])
+      .optional()
+      .transform((v) => v ?? "contact"),
+  })
+  .superRefine((d, ctx) => {
+    if (d.contactMethod === "email" && !d.email) {
+      ctx.addIssue({ code: "custom", path: ["email"], message: "Add an email address, or choose another way to reach you." });
+    }
+    if (d.source === "book" && !d.location) {
+      ctx.addIssue({ code: "custom", path: ["location"], message: "Please tell us the town or venue." });
+    }
   });
 }
 

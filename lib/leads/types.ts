@@ -1,5 +1,9 @@
 import type { InquiryData } from "@/lib/contact/schema";
 
+/** Fields added with the booking flow. Leads stored before it lack them. */
+type BookingFields = "eventTime" | "location" | "hours" | "extras" | "contactMethod" | "source";
+export type LeadData = Omit<InquiryData, BookingFields> & Partial<Pick<InquiryData, BookingFields>>;
+
 export type NotificationState = "pending" | "sent" | "failed";
 
 export type NotificationStatus = {
@@ -21,7 +25,7 @@ export type LeadRecord = {
   id: string;
   idempotencyKey: string;
   createdAt: string; // ISO 8601, UTC
-  data: InquiryData;
+  data: LeadData;
   notification: NotificationStatus;
 };
 

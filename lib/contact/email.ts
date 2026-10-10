@@ -1,6 +1,17 @@
 import type { LeadRecord } from "@/lib/leads/types";
 import { escapeHtml as e, telHref } from "./escape";
 import { BUSINESS_TZ, formatLongDate } from "./dates";
+import { extras as EXTRAS } from "@/lib/content/facts";
+
+const METHOD_LABEL: Record<string, string> = { phone: "Phone call", email: "Email" };
+
+/** "7:30 pm" for "19:30". */
+export function formatTime(hhmm: string): string {
+  const m = /^(\d{2}):(\d{2})$/.exec(hhmm);
+  if (!m) return hhmm;
+  const h = Number(m[1]);
+  return `${h % 12 || 12}:${m[2]} ${h < 12 ? "am" : "pm"}`;
+}
 
 export type InquiryEmail = { subject: string; html: string; text: string; replyTo?: string };
 
@@ -19,6 +30,12 @@ export function buildInquiryEmail(lead: LeadRecord): InquiryEmail {
     timeStyle: "short",
   });
   const ref = lead.id.slice(0, 8).toUpperCase();
+  // Booking-flow fields are optional; leads stored before they existed lack them.
+  const time = d.eventTime ? formatTime(d.eventTime) : "";
+  const when = time ? `${date}, ${time} ET` : date;
+  const extrasText = (d.extras ?? []).map((k) => EXTRAS.find((x) => x.key === k)?.label ?? k).join(", ");
+  const method = d.contactMethod ? METHOD_LABEL[d.contactMethod] ?? "" : "";
+  const via = d.source === "book" ? "the booking flow (/book)" : "the inquiry form";
 
   const subject = `New inquiry from ${d.name}${d.plan ? ` (${d.plan})` : ""} [${ref}]`;
 
@@ -57,12 +74,16 @@ ${d.plan ? `<tr><td style="background:#1a1508;border:1px solid #c9a84c;padding:1
         <td width="50%" style="padding-bottom:18px;vertical-align:top;">${label("Phone")}${value(e(d.phone))}</td></tr>
     ${d.email ? `<tr><td colspan="2" style="padding-bottom:18px;">${label("Email")}${value(e(d.email))}</td></tr>` : ""}
     <tr><td style="padding-bottom:18px;vertical-align:top;">${label("Event type")}${value(e(d.eventType))}</td>
-        <td style="padding-bottom:18px;vertical-align:top;">${label("Event date")}${value(e(date), "color:#c9a84c;")}</td></tr>
-    <tr><td colspan="2" style="padding-bottom:18px;">${label("Guests")}${value(e(d.guestCount))}</td></tr>
+        <td style="padding-bottom:18px;vertical-align:top;">${label("Event date")}${value(e(when), "color:#c9a84c;")}</td></tr>
+    ${d.location ? `<tr><td colspan="2" style="padding-bottom:18px;">${label("Town or venue")}${value(e(d.location))}</td></tr>` : ""}
+    <tr><td style="padding-bottom:18px;vertical-align:top;">${label("Guests")}${value(e(d.guestCount))}</td>
+        <td style="padding-bottom:18px;vertical-align:top;">${d.hours ? `${label("Hours")}${value(e(d.hours))}` : ""}</td></tr>
+    ${extrasText ? `<tr><td colspan="2" style="padding-bottom:18px;">${label("Also asked for")}${value(e(extrasText))}</td></tr>` : ""}
+    ${method ? `<tr><td colspan="2" style="padding-bottom:18px;">${label("Preferred contact")}${value(e(method))}</td></tr>` : ""}
     ${d.details ? `<tr><td colspan="2" style="border-top:1px solid #2a2a2a;padding-top:18px;">${label("Details")}${value(e(d.details), "font-size:14px;line-height:1.7;white-space:pre-wrap;")}</td></tr>` : ""}
   </table>
 </td></tr>
-<tr><td style="padding-top:24px;"><p style="margin:0;font-size:11px;color:#8a8a8a;">Submitted via garnish.info &middot; ${e(submittedAt)} ET &middot; lead ${e(lead.id)}</p></td></tr>
+<tr><td style="padding-top:24px;"><p style="margin:0;font-size:11px;color:#8a8a8a;">Submitted via ${e(via)} on garnish.info &middot; ${e(submittedAt)} ET &middot; lead ${e(lead.id)}</p></td></tr>
 </table></td></tr></table>
 </body></html>`;
 
@@ -74,11 +95,15 @@ ${d.plan ? `<tr><td style="background:#1a1508;border:1px solid #c9a84c;padding:1
     d.email ? `Email: ${d.email}` : null,
     d.plan ? `Package: ${d.plan}` : null,
     `Event: ${d.eventType}`,
-    `Date: ${date}`,
+    `Date: ${when}`,
+    d.location ? `Town or venue: ${d.location}` : null,
     `Guests: ${d.guestCount}`,
+    d.hours ? `Hours: ${d.hours}` : null,
+    extrasText ? `Also asked for: ${extrasText}` : null,
+    method ? `Preferred contact: ${method}` : null,
     d.details ? `\nDetails:\n${d.details}` : null,
     "",
-    `Submitted ${submittedAt} ET · lead ${lead.id}`,
+    `Submitted via ${via}, ${submittedAt} ET · lead ${lead.id}`,
   ]
     .filter((l) => l !== null)
     .join("\n");
