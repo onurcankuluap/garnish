@@ -3,7 +3,6 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import CursorDot from "@/components/CursorDot";
-import BartenderWidget from "@/components/BartenderWidget";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -152,7 +151,6 @@ export default function RootLayout({
         <CursorDot />
         <Nav />
         {children}
-        <BartenderWidget />
       </body>
     </html>
   );
