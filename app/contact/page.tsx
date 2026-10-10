@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import ContactForm from "@/components/ContactForm";
-
-const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
+import { phone } from "@/lib/content/facts";
 
 export const metadata = {
   title: "Book a Private Bartender — Inquire",
@@ -51,7 +50,7 @@ export default function ContactPage() {
                 Prefer to call?
               </p>
               <a
-                href={`tel:${phone}`}
+                href={`tel:${phone.tel}`}
                 className="group inline-flex items-center gap-3 min-h-[44px] font-inter text-sm text-foreground hover:text-gold transition-colors duration-200"
               >
                 <span aria-hidden="true" className="w-8 h-px bg-gold flex-shrink-0 group-hover:w-12 transition-all duration-300" />
