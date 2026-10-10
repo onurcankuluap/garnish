@@ -1,17 +1,9 @@
 import type { LeadRecord } from "@/lib/leads/types";
 import { escapeHtml as e, telHref } from "./escape";
-import { BUSINESS_TZ, formatLongDate } from "./dates";
+import { BUSINESS_TZ, formatLongDate, formatTime } from "./dates";
 import { extras as EXTRAS } from "@/lib/content/facts";
 
 const METHOD_LABEL: Record<string, string> = { phone: "Phone call", email: "Email" };
-
-/** "7:30 pm" for "19:30". */
-export function formatTime(hhmm: string): string {
-  const m = /^(\d{2}):(\d{2})$/.exec(hhmm);
-  if (!m) return hhmm;
-  const h = Number(m[1]);
-  return `${h % 12 || 12}:${m[2]} ${h < 12 ? "am" : "pm"}`;
-}
 
 export type InquiryEmail = { subject: string; html: string; text: string; replyTo?: string };
 

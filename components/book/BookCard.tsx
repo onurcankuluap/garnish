@@ -1,32 +1,21 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { extras, tiers } from "@/lib/content/facts";
 import { eventLabel, type Selection } from "@/lib/compose/quote";
-import { hasAny, load, save } from "@/lib/compose/selection";
-import { track } from "@/lib/analytics";
+import { hasAny } from "@/lib/compose/selection";
 
 /**
- * The card carried over from Compose your bar. The URL wins (it was just
- * composed); otherwise the session's saved card is used. Extension point for
- * the booking flow (Phase 7): read the same `Selection` with `fromParams` /
- * `load` from lib/compose/selection.
+ * The card carried over from Compose your bar, as a live summary of the
+ * booking flow's bar step (components/book/BookingFlow owns the state).
+ * Editing happens in the flow ("Edit the card" jumps to the bar step).
  */
-export default function BookCard({ fromUrl }: { fromUrl: Selection }) {
-  const [sel, setSel] = useState<Selection>(fromUrl);
-
-  useEffect(() => {
-    track("booking_start", { withCard: hasAny(fromUrl) });
-    if (hasAny(fromUrl)) {
-      save(fromUrl);
-      return;
-    }
-    const saved = load();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- restore the session's card after hydration
-    if (hasAny(saved)) setSel(saved);
-  }, [fromUrl]);
-
+export default function BookCard({
+  sel,
+  onEdit,
+  onAsk,
+}: {
+  sel: Selection;
+  onEdit?: () => void;
+  onAsk?: (opener: HTMLElement) => void;
+}) {
   const tier = tiers.find((t) => t.key === sel.tier);
   const rows: [string, string | null][] = [
     ["Occasion", eventLabel(sel.event)],
@@ -37,7 +26,7 @@ export default function BookCard({ fromUrl }: { fromUrl: Selection }) {
   ];
 
   return (
-    <div className="receipt" aria-labelledby="card-h">
+    <aside className="receipt" aria-labelledby="card-h">
       <h2 id="card-h">Your card</h2>
       {hasAny(sel) ? (
         <ul>
@@ -51,11 +40,20 @@ export default function BookCard({ fromUrl }: { fromUrl: Selection }) {
             ))}
         </ul>
       ) : (
-        <p className="empty">No card yet. Compose one, or simply tell us the date.</p>
+        <p className="empty">No card yet. Choose the bar in step three, or simply tell us the date.</p>
       )}
-      <Link className="edit" href="/#compose">
-        {hasAny(sel) ? "Edit the card" : "Compose your bar"}
-      </Link>
-    </div>
+      <div className="rc-actions">
+        {onEdit && (
+          <button type="button" className="edit" onClick={onEdit}>
+            {hasAny(sel) ? "Edit the card" : "Choose the bar"}
+          </button>
+        )}
+        {onAsk && (
+          <button type="button" className="edit" onClick={(e) => onAsk(e.currentTarget)}>
+            Questions? Ask the AI concierge
+          </button>
+        )}
+      </div>
+    </aside>
   );
 }

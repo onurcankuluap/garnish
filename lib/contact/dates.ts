@@ -42,3 +42,11 @@ export function formatLongDate(ymd: string): string {
     day: "numeric",
   });
 }
+
+/** "7:30 pm" for "19:30" (a wall-clock time; no timezone shift). */
+export function formatTime(hhmm: string): string {
+  const m = /^(\d{2}):(\d{2})$/.exec(hhmm);
+  if (!m) return hhmm;
+  const h = Number(m[1]);
+  return `${h % 12 || 12}:${m[2]} ${h < 12 ? "am" : "pm"}`;
+}
