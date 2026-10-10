@@ -17,66 +17,43 @@ const inter = Inter({
 
 const BASE_URL = "https://www.garnish.info";
 
+// Copy here repeats only what the site already publishes. Unverified
+// claims (service in Philadelphia/DC, "8 years", former venues as
+// credentials, a price range) were removed pending owner confirmation.
+const DESCRIPTION =
+  "Private bartender for weddings, dinner parties, corporate events and more, based in Rehoboth Beach, Delaware. Send an inquiry and get a personal call back.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
     default: "Garnish | Private Bartender for Hire — Rehoboth Beach, DE",
     template: "%s | Garnish Private Bartender",
   },
-  description:
-    "Hire a private bartender for weddings, dinner parties, corporate events & more. Onur Kulualp brings 8 years of professional bar experience to Rehoboth Beach, DE, Philadelphia & DC.",
-  keywords: [
-    "private bartender",
-    "rent a bartender near me",
-    "bartender for hire",
-    "private bartender Rehoboth Beach",
-    "private bartender Delaware",
-    "wedding bartender Delaware",
-    "private event bartender",
-    "mobile bartender",
-    "bartender for private party",
-    "cocktail bartender for hire",
-    "bespoke bartending service",
-    "bartender Philadelphia",
-    "bartender DC",
-    "private bartender near me",
-  ],
+  description: DESCRIPTION,
   authors: [{ name: "Onur Kulualp" }],
   creator: "Onur Kulualp",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: BASE_URL,
     siteName: "Garnish Private Bartender",
     title: "Garnish | Private Bartender for Hire — Rehoboth Beach, DE",
-    description:
-      "Hire a private bartender for your next event. Weddings, dinner parties, corporate events. Serving Rehoboth Beach, Philadelphia & DC.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Garnish — Private Bartender Service",
-      },
-    ],
+    description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
     title: "Garnish | Private Bartender for Hire",
-    description:
-      "Bespoke bartending for private events. 8 years experience. Serving DE, Philadelphia & DC.",
-    images: ["/og-image.jpg"],
+    description: DESCRIPTION,
   },
   robots: {
     index: true,
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  alternates: {
-    canonical: BASE_URL,
-  },
 };
 
+// Structured data: only facts the site publishes. No areaServed beyond the
+// published base town, no experience years, no former-venue "credentials",
+// no priceRange (owner to confirm before any of these return).
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -85,37 +62,22 @@ const jsonLd = {
       "@id": `${BASE_URL}/#business`,
       name: "Garnish Private Bartender",
       url: BASE_URL,
-      description:
-        "Bespoke private bartending for weddings, dinner parties, corporate events, and more. Serving Rehoboth Beach DE, Philadelphia, and Washington DC.",
-      founder: { "@type": "Person", name: "Onur Kulualp" },
-      areaServed: [
-        { "@type": "City", name: "Rehoboth Beach", containedIn: "Delaware" },
-        { "@type": "City", name: "Philadelphia", containedIn: "Pennsylvania" },
-        { "@type": "City", name: "Washington DC" },
-        { "@type": "State", name: "Delaware" },
-      ],
+      image: `${BASE_URL}/opengraph-image`,
+      description: DESCRIPTION,
+      founder: { "@id": `${BASE_URL}/#person` },
       serviceType: [
         "Private Bartender",
         "Wedding Bartender",
         "Corporate Event Bartender",
         "Dinner Party Bartender",
-        "Mobile Bartending Service",
       ],
-      telephone: process.env.NEXT_PUBLIC_PHONE_NUMBER,
+      ...(process.env.NEXT_PUBLIC_PHONE_NUMBER ? { telephone: process.env.NEXT_PUBLIC_PHONE_NUMBER } : {}),
       address: {
         "@type": "PostalAddress",
         addressLocality: "Rehoboth Beach",
         addressRegion: "DE",
         addressCountry: "US",
       },
-      priceRange: "$$",
-      knowsAbout: [
-        "Craft Cocktails",
-        "Classic Bartending",
-        "Seasonal Menus",
-        "Private Event Service",
-        "Wedding Bar Service",
-      ],
     },
     {
       "@type": "Person",
@@ -123,12 +85,6 @@ const jsonLd = {
       name: "Onur Kulualp",
       jobTitle: "Private Bartender",
       worksFor: { "@id": `${BASE_URL}/#business` },
-      hasCredential: [
-        "Bardea Food & Drink",
-        "Stingray Sushi Bar & Asian Grill",
-        "Bodhi Kitchen",
-        "Drift Seafood & Raw Bar",
-      ],
     },
   ],
 };
@@ -148,6 +104,9 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-foreground font-inter antialiased">
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <CursorDot />
         <Nav />
         {children}

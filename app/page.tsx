@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import HeroVideo from "@/components/HeroVideo";
 import GarnishLogo from "@/components/GarnishLogo";
 import GarnishChat from "@/components/GarnishChat";
 
 const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER ?? "";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "https://www.garnish.info" },
+  openGraph: { url: "https://www.garnish.info" },
+};
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 
@@ -24,21 +30,17 @@ export default function Home() {
   const marquee = [...marqueeItems, ...marqueeItems];
 
   return (
-    <main className="overflow-x-hidden">
-      {/* Hidden H1 for crawlers — visible heading is in the hero below */}
-      <h1 className="sr-only">
-        Private Bartender for Hire — Rehoboth Beach, Delaware | Garnish
-      </h1>
+    <main id="main" className="overflow-x-hidden">
 
       {/* ══════════════════════════════════════════
           HERO
       ══════════════════════════════════════════ */}
-      <section className="relative min-h-screen flex flex-col justify-end px-6 md:px-16 pb-16 md:pb-20 pt-32">
+      <section className="relative min-h-screen flex flex-col justify-end px-6 md:px-16 pb-28 md:pb-20 pt-32">
         <HeroVideo />
 
         <div className="hidden md:block absolute left-16 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#c9a84c]/20 to-transparent pointer-events-none" />
 
-        <span className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2 font-cormorant text-[220px] font-semibold leading-none text-white/[0.022] select-none pointer-events-none">
+        <span aria-hidden="true" className="hidden lg:block absolute right-10 top-1/2 -translate-y-1/2 font-cormorant text-[220px] font-semibold leading-none text-white/[0.022] select-none pointer-events-none">
           BAR
         </span>
 
@@ -52,7 +54,7 @@ export default function Home() {
             </span>
 
             <span className="hidden sm:inline-flex items-center gap-1.5 border border-gold/30 px-3 py-1 font-inter text-[9px] tracking-[0.2em] uppercase text-gold/70 ml-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
+              <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
               Now Booking 2026
             </span>
           </div>
@@ -98,7 +100,7 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="anim-fade-in hidden md:flex absolute bottom-10 right-10 flex-col items-center gap-3 opacity-30">
+        <div aria-hidden="true" className="anim-fade-in hidden md:flex absolute bottom-10 right-10 flex-col items-center gap-3 opacity-30">
           <span className="font-inter text-[9px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
             Scroll
           </span>
