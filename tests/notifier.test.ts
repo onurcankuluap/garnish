@@ -5,7 +5,7 @@ const email = { subject: "s", html: "<p>h</p>", text: "t", idempotencyKey: "garn
 
 function notifierReturning(impl: () => Promise<unknown>, timeoutMs = 50) {
   const client: EmailClient = { emails: { send: () => impl() } };
-  return createResendNotifier({ client, from: "Garnish <bookings@send.garnish.info>", to: "owner@example.com", timeoutMs });
+  return createResendNotifier({ client, from: "Garnish <bookings@garnish.info>", to: "owner@example.com", timeoutMs });
 }
 
 describe("Resend notifier", () => {
@@ -92,7 +92,7 @@ describe("mail config", () => {
 
   it("production with a verified-domain sender is accepted", () => {
     expect(
-      resolveMailConfig({ ...base, NODE_ENV: "production", CONTACT_FROM: "Garnish <bookings@send.garnish.info>" })
+      resolveMailConfig({ ...base, NODE_ENV: "production", CONTACT_FROM: "Garnish <bookings@garnish.info>" })
     ).toMatchObject({ ok: true });
   });
 });
