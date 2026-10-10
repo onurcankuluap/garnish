@@ -620,7 +620,7 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
                         draft.guests ? `${draft.guests} guests` : null,
                         draft.hours ? `${draft.hours} hours` : null,
                         tierName ?? "Bar not chosen yet",
-                        draft.extras.length ? `also ${draft.extras.map(extraLabel).join(", ").toLowerCase()}` : null,
+                        draft.extras.length ? `also ${draft.extras.map((k) => lowerFirst(extraLabel(k))).join(", ")}` : null,
                       ]
                         .filter(Boolean)
                         .join(" · ")}
@@ -704,6 +704,9 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
     </>
   );
 }
+
+/** "A DJ" → "a DJ" (keeps acronyms). */
+const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 function weekday(ymd: string) {
   const [y, m, d] = ymd.split("-").map(Number);
