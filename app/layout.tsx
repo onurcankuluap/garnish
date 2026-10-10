@@ -44,11 +44,6 @@ export const metadata: Metadata = {
     title: "Garnish | Private Bartender for Hire",
     description: DESCRIPTION,
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true },
-  },
 };
 
 // Structured data: only facts the site publishes. No areaServed beyond the
