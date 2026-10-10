@@ -1,6 +1,7 @@
 import { clientIp, json, readJsonBody } from "@/lib/server/http";
 import type { RateLimiter } from "@/lib/server/rateLimit";
 import { log } from "@/lib/server/log";
+import { guardReply } from "@/lib/concierge/grounding";
 
 export const MAX_MESSAGE_CHARS = 3000;
 export const MAX_REPLY_CHARS = 4000;
@@ -30,6 +31,7 @@ const rateHeaders = (r: { limit: number; remaining: number; reset: number }) => 
 /**
  * POST /api/chat  { message: string <= 3000 }  ->  200 { reply } | 4xx/5xx { error }
  * The contract is unchanged; errors are structured and never echo input.
+ * Replies that assert unverified business claims are replaced (same shape).
  */
 export async function handleChat(req: Request, deps: ChatDeps): Promise<Response> {
   if (!deps.limiter) {
@@ -106,5 +108,9 @@ export async function handleChat(req: Request, deps: ChatDeps): Promise<Response
     return json({ error: "Chat service is temporarily unavailable" }, 502);
   }
 
-  return json({ reply: reply.trim().slice(0, MAX_REPLY_CHARS) }, 200, rateHeaders(r));
+  // Grounding: a reply asserting a claim facts.ts does not verify is replaced
+  // with a safe answer (lib/concierge/grounding). Same { reply } shape.
+  const guarded = guardReply(reply.trim());
+  if (guarded.replaced) log.info("chat_reply_guarded");
+  return json({ reply: guarded.text.slice(0, MAX_REPLY_CHARS) }, 200, rateHeaders(r));
 }
