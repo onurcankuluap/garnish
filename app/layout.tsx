@@ -5,7 +5,8 @@ import "./styles/lit.css";
 import Header from "@/components/site/Header";
 import MobileBar from "@/components/site/MobileBar";
 import Footer from "@/components/site/Footer";
-import GarnishChat from "@/components/GarnishChat";
+import Concierge from "@/components/concierge/Concierge";
+import "./styles/concierge.css";
 import { BASE_URL, DESCRIPTION, SITE_TITLE, jsonLd } from "@/lib/content/seo";
 import { business } from "@/lib/content/facts";
 
@@ -76,7 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Footer />
         <MobileBar />
-        <GarnishChat />
+        <Concierge />
       </body>
     </html>
   );

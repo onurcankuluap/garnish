@@ -85,14 +85,22 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
   const failureRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
 
-  // One key and start time per booking; restore the session's card.
+  // One idempotency key and start time per booking (kept across retries).
   useEffect(() => {
     key.current = newKey();
     startedAt.current = Date.now();
+  }, []);
+
+  // The card: from the URL (also when the concierge hands off while already
+  // on /book), else the session's saved card.
+  useEffect(() => {
     track("booking_start", { withCard: hasAny(fromUrl) });
-    /* eslint-disable react-hooks/set-state-in-effect -- one-time restore from sessionStorage after hydration */
-    if (hasAny(fromUrl)) save(fromUrl);
-    else {
+    /* eslint-disable react-hooks/set-state-in-effect -- restore the card from the URL or sessionStorage after hydration */
+    if (hasAny(fromUrl)) {
+      save(fromUrl);
+      setDraft((d) => fromSelection(fromUrl, d));
+      setFromCard(true);
+    } else {
       const saved = load();
       if (hasAny(saved)) {
         setDraft((d) => fromSelection(saved, d));

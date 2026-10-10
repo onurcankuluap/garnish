@@ -9,9 +9,10 @@
  * - package_select  a tier chosen in Compose your bar
  * - compose_to_book Compose your bar → /book with the card
  * - booking_start   /book mounted (booking flow, Phase 7)
- * - booking_complete / booking_error  the booking flow's result (Phase 7)
- * - chat_open       the AI concierge opened
- * - chat_to_booking the concierge's link into booking (Phase 8)
+ * - booking_complete { notify: sent|delayed, tier }  the booking flow stored the lead
+ * - booking_error    { code: store|validation|rate_limited|network|other, step }
+ * - chat_open        { surface }  the AI concierge opened
+ * - chat_to_booking  { turn_band: 1|2-3|4+ }  "Check your date" from the concierge
  *
  * Never pass personal data: names, emails, phone numbers, free text or dates
  * are stripped by `sanitize` as a backstop.
@@ -48,7 +49,23 @@ export function sanitize(props: AnalyticsProps = {}): AnalyticsProps {
   return out;
 }
 
+/**
+ * Debug tap for browser checks: if the page defines `window.__garnishEvents`
+ * as an array (only ever in a test or a developer's own console), sanitized
+ * events are appended to it. Nothing leaves the page.
+ */
+function tap(event: AnalyticsEvent, props: AnalyticsProps) {
+  if (typeof window === "undefined") return;
+  const t = (window as unknown as { __garnishEvents?: unknown }).__garnishEvents;
+  if (Array.isArray(t)) t.push({ event, props });
+}
+
 export function track(event: AnalyticsEvent, props?: AnalyticsProps) {
+  try {
+    tap(event, sanitize(props));
+  } catch {
+    // never break the page
+  }
   if (!sink) return;
   try {
     sink(event, sanitize(props));

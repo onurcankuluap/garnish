@@ -5,12 +5,17 @@ import { usePathname } from "next/navigation";
 import { phone } from "@/lib/content/facts";
 import { BOOK_HREF } from "@/lib/content/site";
 import { track } from "@/lib/analytics";
+import { openConcierge } from "@/lib/concierge/events";
 
-/** Opens the AI concierge (components/GarnishChat listens for this event). */
-export const OPEN_CHAT_EVENT = "garnish:open-chat";
+/** Opens the AI concierge (components/concierge/Concierge listens for it). */
+export { OPEN_CHAT_EVENT } from "@/lib/concierge/events";
 
+// Fields inside a modal dialog (the concierge) don't count: the dialog covers
+// the bar anyway, and the bar's Ask button must stay focusable for the
+// dialog to return focus to it on close.
 const isField = (el: Element | null) =>
   !!el &&
+  !el.closest("dialog") &&
   (el instanceof HTMLTextAreaElement ||
     el instanceof HTMLSelectElement ||
     (el instanceof HTMLInputElement && !/^(button|submit|checkbox|radio|range|reset|hidden)$/.test(el.type)) ||
@@ -62,7 +67,8 @@ export default function MobileBar() {
         type="button"
         className="ask"
         aria-label="Ask the AI concierge"
-        onClick={() => window.dispatchEvent(new Event(OPEN_CHAT_EVENT))}
+        aria-haspopup="dialog"
+        onClick={(e) => openConcierge({ opener: e.currentTarget, surface: "sticky_bar" })}
       >
         Ask
       </button>
