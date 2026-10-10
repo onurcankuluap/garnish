@@ -2,24 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Design tokens (The Lit Menu). Contrast on ink #0B0B0A: text 16.9, text-2
+   11.1, muted 6.6, gold 8.6 (ink on gold 8.6). On paper #F2EDE4: paper-ink
+   15.1, paper-muted 6.4, paper-gold 5.2. Gold is never text on paper. */
 :root {
-  --background: #0a0a0a;
-  --foreground: #f0ece4;
-  --gold: #c9a84c;
-  --gold-light: #d4b05f;
-  --card: #111111;
-  --card-border: rgba(255,255,255,0.07);
-  /* #858585 = 5.4:1 on ink, 5.0:1 on #141414 cards (was #5a5a5a, 2.87:1) */
-  --muted: #858585;
-  --muted-light: #a3a3a3;
+  --ink: #0B0B0A;
+  --graphite: #17161A;
+  --raised: #1F1E22;
+  --rule: rgba(242, 237, 228, 0.12);
+  --rule-strong: rgba(242, 237, 228, 0.24);
+  --grid: rgba(242, 237, 228, 0.06);
+  --text: #F2EDE4;
+  --text-2: #C9C2B5;
+  --muted: #9A958C;
+  --gold: #C9A84C;
+  --gold-hover: #D6B65C;
+  --paper: #F2EDE4;
+  --paper-ink: #1B1915;
+  --paper-muted: #5A5449;
+  --paper-gold: #7A5F1E;
+  --error: #F0B4A2;
+  --expo: cubic-bezier(.16, 1, .3, 1);
+
+  /* Stage 1 names, kept for the contact form and chat */
+  --background: var(--ink);
+  --foreground: var(--text);
+  --gold-light: var(--gold-hover);
+  --card: var(--graphite);
+  --card-border: var(--rule);
+  --muted-light: var(--text-2);
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
-
   body {
-    color: var(--foreground);
-    background: var(--background);
+    color: var(--text);
+    background: var(--ink);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -27,17 +44,6 @@
   :focus-visible {
     outline: 2px solid var(--gold);
     outline-offset: 3px;
-  }
-
-  /* Subtle grain overlay on body */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-    opacity: 0.025;
-    pointer-events: none;
-    z-index: 9999;
   }
 }
 
@@ -49,79 +55,8 @@
   .border-gold    { border-color: var(--gold); }
 }
 
-/* ─── Animations ─────────────────────────────────────────────── */
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes lineGrow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
-@keyframes scrollPulse {
-  0%, 100% { transform: translateY(0); opacity: 0.4; }
-  50%       { transform: translateY(6px); opacity: 0.8; }
-}
-
-.anim-fade-up   { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
-.anim-fade-up-1 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.12s both; }
-.anim-fade-up-2 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.24s both; }
-.anim-fade-up-3 { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.36s both; }
-.anim-fade-in   { animation: fadeIn 1.2s ease 0.1s both; }
-
-.scroll-pulse { animation: scrollPulse 2s ease-in-out infinite; }
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-.marquee-outer {
-  overflow: hidden;
-  /* Fade to transparent on both edges */
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
-
-.marquee-track {
-  animation: marquee 36s linear infinite;
-  will-change: transform;
-}
-
-/* Pause on hover — intentional interaction signal */
-.marquee-outer:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-/* Respect reduced-motion system preference */
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
-  .anim-fade-up, .anim-fade-up-1, .anim-fade-up-2, .anim-fade-up-3, .anim-fade-in {
-    animation: none;
-  }
-  .scroll-pulse { animation: none; }
   .animate-pulse, .animate-ping { animation: none; }
-  html { scroll-behavior: auto; }
 }
 
 /* Skip link: hidden until focused */
@@ -132,37 +67,10 @@
   z-index: 10000;
   padding: 12px 16px;
   background: var(--gold);
-  color: #0a0a0a;
+  color: var(--ink);
   font: 600 12px/1 var(--font-inter), system-ui, sans-serif;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   transform: translateY(-200%);
 }
 .skip-link:focus { transform: none; }
-
-/* ─── Utilities ──────────────────────────────────────────────── */
-
-.gold-line {
-  display: block;
-  height: 1px;
-  background: linear-gradient(to right, var(--gold), transparent);
-  transform-origin: left;
-}
-
-/* Underline-grow hover on links */
-.link-hover {
-  position: relative;
-}
-.link-hover::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease;
-}
-.link-hover:hover::after { transform: scaleX(1); }

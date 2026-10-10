@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
+import { OPEN_CHAT_EVENT } from "@/components/site/MobileBar";
 
 type Message = {
   role: "user" | "assistant";
@@ -31,6 +33,17 @@ export default function GarnishChat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const wasOpen = useRef(false);
+
+  // the phones' bar ("Ask") and any other entry point open it with an event
+  useEffect(() => {
+    const open = () => setIsOpen(true);
+    window.addEventListener(OPEN_CHAT_EVENT, open);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, open);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) track("chat_open");
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
@@ -98,7 +111,7 @@ export default function GarnishChat() {
         aria-label={isOpen ? "Close the AI concierge" : "Open the AI concierge"}
         aria-expanded={isOpen}
         aria-controls="garnish-concierge"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 bg-[#111111] text-gold shadow-[0_10px_40px_rgba(0,0,0,0.45)] transition-colors hover:border-gold hover:bg-[#171717]"
+        className="chat-launcher fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 bg-[#111111] text-gold shadow-[0_10px_40px_rgba(0,0,0,0.45)] transition-colors hover:border-gold hover:bg-[#171717]"
       >
         {isOpen ? (
           <span className="text-xl" aria-hidden="true">
@@ -209,8 +222,8 @@ export default function GarnishChat() {
               </button>
             </div>
             <div className="mt-3 flex items-center justify-between gap-3 font-inter text-xs">
-              <Link href="/contact" className="inline-flex min-h-[32px] items-center text-gold hover:text-[#d4b05f]">
-                Send an inquiry →
+              <Link href="/book" data-track="chat_to_booking" className="inline-flex min-h-[32px] items-center text-gold hover:text-[#d4b05f]">
+                Check your date →
               </Link>
               {phone && (
                 <a href={`tel:${phone}`} className="inline-flex min-h-[32px] items-center text-[var(--muted-light)] hover:text-gold">
