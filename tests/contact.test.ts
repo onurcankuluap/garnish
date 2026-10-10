@@ -269,4 +269,19 @@ describe("POST /api/contact", () => {
     const serialised = JSON.stringify(await store.list(1));
     expect(serialised).not.toContain("203.0.113.7");
   });
+  it("omitted or wrongly typed fields get clean messages, never zod internals (same 422 contract)", async () => {
+    const body: Record<string, unknown> = validBody({ guestCount: true, name: 42 });
+    delete body.email;
+    delete body.details;
+    delete body.plan;
+    const { res, body: out } = await call(contactRequest(body));
+    expect(res.status).toBe(422);
+    expect(out.code).toBe("invalid_fields");
+    const fields = out.fields as Record<string, string>;
+    expect(Object.keys(fields).sort()).toEqual(["details", "email", "guestCount", "name", "plan"]);
+    for (const m of Object.values(fields)) {
+      expect(m).not.toMatch(/invalid input|expected|received|nonoptional/i);
+    }
+    expect(fields.plan).toBe("Please choose one of the packages.");
+  });
 });

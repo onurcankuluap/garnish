@@ -178,7 +178,33 @@ export function validateInquiry(
   const fields: FieldErrors = {};
   for (const issue of parsed.error.issues) {
     const key = issue.path[0] as keyof InquiryData | undefined;
-    if (key && !fields[key]) fields[key] = issue.message;
+    if (key && !fields[key]) fields[key] = cleanMessage(key, issue.message);
   }
   return { ok: false, fields };
+}
+
+/**
+ * Field messages for zod's built-in issues ("Invalid input: expected
+ * nonoptional, received undefined" when a field is omitted, or a wrong JSON
+ * type). Library wording never reaches the visitor.
+ */
+const FALLBACK: Partial<Record<keyof InquiryData, string>> = {
+  name: "Please enter your name.",
+  phone: "Please enter a phone number.",
+  email: "Please enter a valid email address, or leave it blank.",
+  eventType: "Please choose the type of event.",
+  eventDate: "Please choose a date.",
+  guestCount: "Please enter the number of guests.",
+  details: "Please check the details.",
+  plan: "Please choose one of the packages.",
+  eventTime: "Please choose a valid time, or leave it blank.",
+  location: "Please tell us the town or venue.",
+  hours: `Choose between ${HOURS_RANGE.min} and ${HOURS_RANGE.max} hours.`,
+  extras: "Please check the extras.",
+  contactMethod: "Please choose how to reach you.",
+};
+
+function cleanMessage(key: keyof InquiryData, message: string): string {
+  if (!/^Invalid input\b/i.test(message)) return message;
+  return FALLBACK[key] ?? "Please check this field.";
 }
