@@ -110,3 +110,12 @@
   .bk-field input[type="date"],.bk-field input[type="time"]{max-width:none}
 }
 @media (max-width:380px){.bk-prog{gap:6px 14px}}
+/* Phones: "v. Review" always starts the second row. Whether five steps fit on
+   one row depended on the font (Inter vs. its metric-adjusted fallback is ~5%
+   wider), so a late web font re-wrapped the row and shifted the form (CLS 0.19
+   at 375-429px). Same two rows at every phone width, with either font. */
+@media (max-width:439px){.bk-prog li:nth-child(5){flex-basis:100%}}
+/* "Check your date." fitted one line at 360px by 1px in Cormorant and not at
+   all in its fallback, so the font swap re-wrapped it (CLS 0.21). Below 373px
+   the size now follows the width, leaving room for either font; 52px above. */
+@media (max-width:439px){.book h1{font-size:min(52px,calc((100vw - 40px) / 6.4))}}
