@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
 
 type FormData = {
@@ -70,6 +70,8 @@ function newKey(): string {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
+const noopSubscribe = () => () => {};
+
 const ORDER: Field[] = ["plan", "name", "phone", "email", "eventType", "eventDate", "guestCount", "details"];
 
 function validate(form: FormData, minDate: string): FieldErrors {
@@ -109,21 +111,20 @@ export default function ContactForm() {
   const [errorMsg, setErrorMsg] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [saved, setSaved] = useState<Saved | null>(null);
-  const [minDate, setMinDate] = useState("");
+  // Client-only: New York's today. The server snapshot is "" because the page
+  // is static; computing it during render would freeze the build date.
+  const minDate = useSyncExternalStore(noopSubscribe, todayInNewYork, () => "");
 
   const idemKey = useRef<string>("");
   const startedAt = useRef<number>(0);
   const dateRef = useRef<HTMLInputElement | null>(null);
   const alertRef = useRef<HTMLDivElement>(null);
   const successRef = useRef<HTMLHeadingElement>(null);
-  const fieldRefs = useRef<Partial<Record<Field, HTMLElement | null>>>({});
 
-  // Client-only values: computing these during render would freeze them at
-  // build time (the page is static) and mismatch on hydration.
+  // One idempotency key and start time per form session (client only).
   useEffect(() => {
     idemKey.current = newKey();
     startedAt.current = Date.now();
-    setMinDate(todayInNewYork());
   }, []);
 
   useEffect(() => {
@@ -138,13 +139,9 @@ export default function ContactForm() {
       if (f !== "website" && errors[f]) setErrors((prev) => ({ ...prev, [f]: undefined }));
     };
 
-  const register = (f: Field) => (el: HTMLElement | null) => {
-    fieldRefs.current[f] = el;
-  };
-
   const focusFirstError = (errs: FieldErrors) => {
     const first = ORDER.find((f) => errs[f]);
-    if (first) fieldRefs.current[first]?.focus();
+    if (first) document.getElementById(first)?.focus();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -279,7 +276,6 @@ export default function ContactForm() {
         </label>
         <select
           id="plan"
-          ref={register("plan")}
           className={`${field(Boolean(errors.plan))} cursor-pointer`}
           value={form.plan}
           onChange={set("plan")}
@@ -305,7 +301,6 @@ export default function ContactForm() {
           </label>
           <input
             id="name"
-            ref={register("name")}
             type="text"
             required
             maxLength={100}
@@ -324,7 +319,6 @@ export default function ContactForm() {
           </label>
           <input
             id="phone"
-            ref={register("phone")}
             type="tel"
             required
             maxLength={30}
@@ -346,7 +340,6 @@ export default function ContactForm() {
         </label>
         <input
           id="email"
-          ref={register("email")}
           type="email"
           maxLength={254}
           placeholder="jane@example.com"
@@ -367,7 +360,6 @@ export default function ContactForm() {
           </label>
           <select
             id="eventType"
-            ref={register("eventType")}
             required
             className={`${field(Boolean(errors.eventType))} cursor-pointer`}
             value={form.eventType}
@@ -392,10 +384,7 @@ export default function ContactForm() {
           <div className="relative">
             <input
               id="eventDate"
-              ref={(el) => {
-                dateRef.current = el;
-                fieldRefs.current.eventDate = el;
-              }}
+              ref={dateRef}
               type="date"
               required
               className={`${field(Boolean(errors.eventDate))} cursor-pointer pr-8`}
@@ -442,7 +431,6 @@ export default function ContactForm() {
         </label>
         <input
           id="guestCount"
-          ref={register("guestCount")}
           type="number"
           required
           min="1"
@@ -464,7 +452,6 @@ export default function ContactForm() {
         </label>
         <textarea
           id="details"
-          ref={register("details")}
           rows={4}
           maxLength={2000}
           placeholder="Venue, theme, preferred drinks, special requests…"
