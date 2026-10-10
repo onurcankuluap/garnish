@@ -32,6 +32,9 @@
 .bk-field textarea{resize:vertical;min-height:110px}
 .bk-field input:focus,.bk-field select:focus,.bk-field textarea:focus{border-bottom-color:var(--gold)}
 .bk-field input:focus-visible,.bk-field select:focus-visible,.bk-field textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* Tab also stops on the date/time picker button inside the field; the input
+   is then neither :focus nor :focus-visible, only :focus-within. Same ring. */
+.bk-field input[type=date]:focus-within,.bk-field input[type=time]:focus-within{outline:2px solid var(--gold);outline-offset:3px}
 .bk-field.bad input,.bk-field.bad select,.bk-field.bad textarea{border-bottom-color:var(--error)}
 .bk-field input[type="date"],.bk-field input[type="time"]{max-width:280px}
 .bk-err{margin-top:8px;font:500 13.5px/1.45 var(--sans);color:var(--error)}

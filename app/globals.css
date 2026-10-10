@@ -45,6 +45,13 @@
     outline: 2px solid var(--gold);
     outline-offset: 3px;
   }
+  /* Tab also stops on a date/time field's picker button, where the input is
+     only :focus-within */
+  input[type="date"]:focus-within,
+  input[type="time"]:focus-within {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+  }
 }
 
 @layer utilities {

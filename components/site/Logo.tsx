@@ -16,11 +16,11 @@ export function Coupe({ width = 30, height = 38 }: { width?: number; height?: nu
 
 export default function Logo() {
   return (
-    <Link className="logo" href="/" aria-label="Garnish Private Bartending, home">
+    <Link className="logo" href="/">
       <Coupe />
       <span className="wm">
         <i />
-        <b>Garnish</b>
+        <b>Garnish</b>{" "}
         <s>Private Bartending</s>
       </span>
     </Link>
