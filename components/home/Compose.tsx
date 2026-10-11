@@ -2,8 +2,8 @@
 
 import { useEffect, useId, useState } from "react";
 import Claim from "@/components/ui/Claim";
-import { eventTypes, extras, pricingTerms, tiers, type ExtraKey } from "@/lib/content/facts";
-import { EMPTY, LIMITS, clampGuests, clampHours, compose, eventLabel, usd, type Selection } from "@/lib/compose/quote";
+import { business, eventTypes, extras, pricingTerms, tiers, type ExtraKey } from "@/lib/content/facts";
+import { EMPTY, LIMITS, allRatesVerified, clampGuests, clampHours, compose, eventLabel, tierRateLabel, usd, type Selection } from "@/lib/compose/quote";
 import { bookHref, hasAny, load, save } from "@/lib/compose/selection";
 import { track } from "@/lib/analytics";
 
@@ -120,9 +120,8 @@ export default function Compose() {
                     <span className="nm">
                       {t.name} <span className="dots" aria-hidden="true" />
                     </span>
-                    <span className="pr num">
-                      <Claim fact={t.rate}>from {usd(t.rate.value)} / hr</Claim>
-                    </span>
+                    {/* no figure until the owner verifies the rate, in any environment */}
+                    <span className="pr num">{tierRateLabel(t) ?? <span className="q">By quote</span>}</span>
                     {sel.tier === t.key && (
                       <span className="inc">
                         {t.inclusions.map((f, i) => (
@@ -152,8 +151,9 @@ export default function Compose() {
               </div>
             </fieldset>
             <p className="fineprint">
-              Published starting rates are being confirmed. Over-{pricingTerms.over50Threshold.value} rate, minimum hours, travel and deposit:{" "}
-              <Claim fact={pricingTerms.over50Surcharge} missing="to confirm" />
+              {!allRatesVerified() && "Starting rates are being confirmed, so every card gets a personal quote. "}
+              Over-{pricingTerms.over50Threshold.value} rate, minimum hours, travel and deposit aren&rsquo;t published yet; {business.ownerFirstName.value} confirms them
+              with your quote.
             </p>
           </form>
         </div>

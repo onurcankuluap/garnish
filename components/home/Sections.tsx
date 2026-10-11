@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import Claim, { Placeholder } from "@/components/ui/Claim";
 import { Coupe } from "@/components/site/Logo";
-import { business, claims, eventTypes, phone, pricingTerms, tiers } from "@/lib/content/facts";
+import { business, claims, eventTypes, phone, pricingTerms } from "@/lib/content/facts";
 import { BOOK_HREF } from "@/lib/content/site";
-import { usd } from "@/lib/compose/quote";
+import { verifiedRatesLine } from "@/lib/compose/quote";
 
 function Eyebrow({ n, children }: { n?: string; children: ReactNode }) {
   return (
@@ -104,7 +104,8 @@ export function About() {
 
 /** 07 FAQ: an accessible disclosure list (<details>/<summary>). */
 export function Faq() {
-  const rates = tiers.map((t) => `${t.name} from ${usd(t.rate.value)}/hr`).join(", ");
+  // only verified rates, in every environment; null today (request-for-quote)
+  const rates = verifiedRatesLine();
   const items: { q: string; a: ReactNode }[] = [
     {
       q: "Which events do you work?",
@@ -132,12 +133,17 @@ export function Faq() {
       a: (
         <>
           <p>
-            Published starting rates: <Claim fact={tiers[0].rate}>{rates}</Claim>. Parties over {pricingTerms.over50Threshold.value} guests have an
-            additional hourly rate: <Claim fact={pricingTerms.over50Surcharge} missing="amount to confirm" />
+            {rates ? (
+              <>
+                Published starting rates: {rates}. {business.ownerFirstName.value} confirms the final quote.
+              </>
+            ) : (
+              <>Every evening gets a personal quote: compose your bar, send your card, and {business.ownerFirstName.value} sends one.</>
+            )}{" "}
+            Parties over {pricingTerms.over50Threshold.value} guests have an additional hourly rate.
           </p>
           <p>
-            Minimum hours, travel and deposit: <Claim fact={pricingTerms.minimumHours} missing="to confirm" />. Compose your bar to send your
-            card for a personal quote.
+            Minimum hours, travel and deposit aren&rsquo;t published yet; {business.ownerFirstName.value} confirms them with your quote.
           </p>
         </>
       ),

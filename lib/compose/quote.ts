@@ -152,6 +152,33 @@ export function compose(s: Selection, src: PricingSource = DEFAULT_PRICING): Res
   };
 }
 
+/**
+ * The starting-rate label for a tier ("from $110 / hr"), or null while the
+ * rate is unverified. Null in every environment: no placeholder figure.
+ */
+export function tierRateLabel(t: Tier, sep = " / "): string | null {
+  return t.rate.verified ? `from ${usd(t.rate.value)}${sep}hr` : null;
+}
+
+/** "Basic from $75/hr, Standard from $110/hr" for the verified rates only, or null if none is verified. */
+export function verifiedRatesLine(list: Tier[] = allTiers): string | null {
+  const parts = list.flatMap((t) => {
+    const label = tierRateLabel(t, "/");
+    return label ? [`${t.name} ${label}`] : [];
+  });
+  return parts.length ? parts.join(", ") : null;
+}
+
+/** True once every tier's rate is verified (then the page can stop saying rates are being confirmed). */
+export function allRatesVerified(list: Tier[] = allTiers): boolean {
+  return list.every((t) => t.rate.verified);
+}
+
+/** A package option label for the /contact form: the name, plus the starting rate once verified. */
+export function planOptionLabel(t: Tier): string {
+  return t.rate.verified ? `${t.name} — Starting at ${usd(t.rate.value)}/hr` : t.name;
+}
+
 export function eventLabel(key: EventKey | null) {
   return eventTypes.value.find((e) => e.key === key)?.label ?? null;
 }

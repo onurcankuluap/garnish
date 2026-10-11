@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useSearchParams } from "next/navigation";
+import { tiers } from "@/lib/content/facts";
+import { planOptionLabel } from "@/lib/compose/quote";
 
 type FormData = {
   name: string;
@@ -33,11 +35,8 @@ const initialForm: FormData = {
 
 const eventTypes = ["Wedding", "Private Party", "Corporate Event", "Birthday", "Dinner Party", "Other"];
 
-const plans = [
-  { value: "Basic", label: "Basic — Starting at $75/hr" },
-  { value: "Standard", label: "Standard — Starting at $110/hr" },
-  { value: "Bartender + DJ", label: "Bartender + DJ — Starting at $160/hr" },
-];
+// Package names always; a starting rate only once the owner verifies it (facts.ts).
+const plans = tiers.map((t) => ({ value: t.formValue, label: planOptionLabel(t) }));
 
 /** Maps ?plan= spellings to a published package; anything else is ignored. */
 function planFromParam(raw: string | null): string {

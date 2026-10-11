@@ -16,6 +16,10 @@
  * Unverified claims render as marked placeholders (see `components/ui/Claim`)
  * outside Vercel production, are omitted in production, and never reach
  * metadata or JSON-LD (see `lib/content/seo.ts`).
+ *
+ * Prices (`kind: "price"`: rates, surcharges, fees, deposit) are stricter:
+ * an unverified figure is never shown in any environment, not even as a
+ * "[to confirm]" placeholder. The page shows the request-for-quote state.
  */
 
 export type FactStatus = "published" | "system" | "unverified" | "missing";
@@ -27,6 +31,13 @@ export interface Fact<T> {
   /** Row in docs/redesign-audit/facts.md. */
   register: number;
   source: string;
+  /**
+   * "price" marks a money figure (a rate, surcharge, fee or deposit). Unlike
+   * other claims, an unverified price never renders, not even as a dev
+   * placeholder with "[to confirm]": the page shows the request-for-quote
+   * state until the owner confirms the figure.
+   */
+  kind?: "price";
 }
 
 const fact = <T,>(value: T, verified: boolean, status: FactStatus, register: number, source: string): Fact<T> => ({
@@ -35,6 +46,11 @@ const fact = <T,>(value: T, verified: boolean, status: FactStatus, register: num
   status,
   register,
   source,
+});
+
+const priceFact = <T,>(value: T, verified: boolean, status: FactStatus, register: number, source: string): Fact<T> => ({
+  ...fact(value, verified, status, register, source),
+  kind: "price",
 });
 
 /* ── identity and contact ─────────────────────────────────────────── */
@@ -137,7 +153,7 @@ export const tiers: Tier[] = [
     key: "basic",
     name: "Basic",
     formValue: "Basic",
-    rate: fact(75, false, "published", 19, "app/page.tsx:229-271"),
+    rate: priceFact(75, false, "published", 19, "app/page.tsx:229-271"),
     inclusions: [
       fact("A professional bartender", false, "published", 19, "app/page.tsx:229-271"),
       fact("Hourly flat-rate service", false, "published", 19, "app/page.tsx:229-271"),
@@ -148,7 +164,7 @@ export const tiers: Tier[] = [
     key: "standard",
     name: "Standard",
     formValue: "Standard",
-    rate: fact(110, false, "published", 20, "app/page.tsx:275-324"),
+    rate: priceFact(110, false, "published", 20, "app/page.tsx:275-324"),
     inclusions: [
       fact("Everything in Basic", false, "published", 20, "app/page.tsx:275-324"),
       fact("Two custom cocktails", false, "published", 20, "app/page.tsx:275-324"),
@@ -159,7 +175,7 @@ export const tiers: Tier[] = [
     key: "dj",
     name: "Bartender + DJ",
     formValue: "Bartender + DJ",
-    rate: fact(160, false, "published", 21, "app/page.tsx:327-369"),
+    rate: priceFact(160, false, "published", 21, "app/page.tsx:327-369"),
     inclusions: [
       fact("Everything in Standard", false, "published", 21, "app/page.tsx:327-369"),
       fact("A personalised cocktail menu", false, "published", 21, "app/page.tsx:327-369"),
@@ -171,10 +187,10 @@ export const tiers: Tier[] = [
 export const pricingTerms = {
   /** "+ additional hourly rate for parties over 50 guests": published, amount MISSING. */
   over50Threshold: fact(50, false, "published", 19, "app/page.tsx:229-271"),
-  over50Surcharge: fact<number | null>(null, false, "missing", 22, "none: amount not published"),
+  over50Surcharge: priceFact<number | null>(null, false, "missing", 22, "none: amount not published"),
   minimumHours: fact<number | null>(null, false, "missing", 22, "none"),
-  travelFee: fact<number | null>(null, false, "missing", 22, "none"),
-  deposit: fact<number | null>(null, false, "missing", 22, "none"),
+  travelFee: priceFact<number | null>(null, false, "missing", 22, "none"),
+  deposit: priceFact<number | null>(null, false, "missing", 22, "none"),
   cancellation: fact<string | null>(null, false, "missing", 22, "none"),
 } as const;
 
@@ -211,6 +227,20 @@ export function placeholdersVisible(env?: Env): boolean {
     ? (env.NEXT_PUBLIC_VERCEL_ENV ?? env.VERCEL_ENV)
     : (process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.VERCEL_ENV);
   return v !== "production";
+}
+
+/** True for a money figure (see `Fact.kind`). */
+export function isPrice<T>(f: Fact<T>): boolean {
+  return f.kind === "price";
+}
+
+/**
+ * A price figure, only once the owner has verified it. There is no
+ * environment switch: dev, preview and production all get undefined while a
+ * price is unverified, so no unconfirmed number is ever shown.
+ */
+export function priceValue<T>(f: Fact<T>): T | undefined {
+  return f.verified && f.value !== null ? f.value : undefined;
 }
 
 /** The value if it may be stated as fact (pages, metadata, JSON-LD), else undefined. */

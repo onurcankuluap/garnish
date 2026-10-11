@@ -360,6 +360,7 @@ html:not(.js-motion) .hd{background:rgba(11,11,10,.96);height:64px;border-bottom
 .tier .nm{font:500 26px/1.1 var(--serif);display:flex;align-items:baseline;gap:12px;min-width:0}
 .tier input:checked~.nm{font-style:italic}
 .tier .pr{font:500 13.5px/1 var(--sans);text-align:right}
+.tier .pr .q{color:var(--paper-muted);font:italic 500 15px/1 var(--serif)}
 .tier .inc{grid-column:2/4;margin-top:8px;font:400 12.5px/1.5 var(--sans);color:var(--paper-muted)}
 .cmp .result{position:sticky;top:96px;background:var(--ink);color:var(--text);padding:40px 36px 36px;min-height:420px;display:flex;flex-direction:column}
 .result .eyebrow .r{background:var(--gold)}
