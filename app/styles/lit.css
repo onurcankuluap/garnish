@@ -104,7 +104,6 @@ sup.f{font-family:var(--sans);font-size:.42em;color:var(--gold);vertical-align:s
 .plate-cap{position:absolute;right:calc(100% - var(--L) - var(--Wc) * .4804 + 30px);bottom:104px;width:210px;text-align:right;font:italic 500 15px/1.35 var(--serif);color:var(--text-2)}
 .plate-cap::after{content:"";position:absolute;right:-22px;bottom:7px;width:14px;height:1px;background:var(--gold)}
 .plate-cap b{display:block;font:500 10px/1 var(--sans);font-style:normal;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
-.plate-cap .pv{display:block;margin-top:9px;font:500 9.5px/1.3 var(--sans);font-style:normal;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .rail{position:absolute;left:5.56vw;right:5.56vw;bottom:0;height:72px;border-top:1px solid var(--rule);display:flex;align-items:center}
 .rail .p{font:400 13px/1 var(--sans);color:var(--text-2)}
 .idx{display:flex;gap:40px;margin-left:auto}
@@ -215,7 +214,6 @@ sup.f{font-family:var(--sans);font-size:.42em;color:var(--gold);vertical-align:s
   .plate-cap{right:max(20px,calc(50% - var(--mw) * .414));bottom:calc(50% - var(--mh) * .049 + 16px);width:auto;max-width:230px;text-shadow:0 0 12px #0B0B0A,0 0 4px #0B0B0A;font-size:14px}
   .plate-cap::after{right:0;bottom:-10px;width:28px}
   .plate-cap b{font-size:9.5px;margin-bottom:6px}
-  .plate-cap .pv{color:var(--text-2);margin-top:7px}
   .copy::before{content:"";position:absolute;left:-60px;top:calc(var(--msub) - 50px);width:440px;height:200px;background:radial-gradient(closest-side,rgba(11,11,10,.8),rgba(11,11,10,.5) 60%,rgba(11,11,10,0))}
   .copy{--msub:calc(160px + var(--mdisp) * 1.72)}
   .copy .msub{position:absolute;left:20px;width:250px;top:var(--msub);font:400 15px/1.5 var(--sans);color:var(--text-2)}

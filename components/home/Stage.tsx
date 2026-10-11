@@ -40,7 +40,7 @@ export default function Stage() {
                     width={1600}
                     height={1276}
                     decoding="async"
-                    alt="Campaign image, AI-generated: an old fashioned over one clear ice cube with an orange-peel twist, smoke rising, on graphite stone."
+                    alt="An old fashioned over one clear ice cube with an orange-peel twist, smoke rising, on graphite stone."
                   />
                 </picture>
               </div>
@@ -81,7 +81,7 @@ export default function Stage() {
             </div>
             <p className="msub">A bartender and a considered bar, for weddings, parties and dinners.</p>
             <p className="plate-cap">
-              <b>Plate I</b>Stirred, over one clear cube<span className="pv">Campaign image · AI-generated</span>
+              <b>Plate I</b>Stirred, over one clear cube
             </p>
             <div className="rail">
               <span className="p">
@@ -145,7 +145,7 @@ export default function Stage() {
                   decoding="async"
                   width={1600}
                   height={1276}
-                  alt="Plate I, campaign image, AI-generated: the same old fashioned, framed on the menu card."
+                  alt="Plate I: the same old fashioned, framed on the menu card."
                 />
               </picture>
             </div>
@@ -153,7 +153,6 @@ export default function Stage() {
               <span>
                 <em>Plate I.</em>Stirred, over one clear cube
               </span>
-              <span>Campaign image · AI-generated</span>
             </figcaption>
           </figure>
           <ol className="course" id="services" aria-label="Occasions">
