@@ -426,6 +426,10 @@ html:not(.js-motion) .hd{background:rgba(11,11,10,.96);height:64px;border-bottom
 .band .ctas{justify-content:flex-end}
 @media (max-width:860px){.band{grid-template-columns:1fr;padding:76px 20px 80px}.band .ctas{justify-content:flex-start}}
 
+/* ── a quiet still on an inner page (/book, /contact, 404): the box sets the size ── */
+.pg-art{position:relative;overflow:hidden;background:var(--graphite)}
+.pg-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
 /* ── generic inner page (book stub, 404) ── */
 .inner{min-height:100vh;padding:150px 5.56vw 120px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px 8vw;align-items:start}
 .inner h1{font:500 clamp(52px,6vw,96px)/1 var(--serif);letter-spacing:-.02em;margin:22px 0 18px}

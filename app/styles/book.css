@@ -1,5 +1,8 @@
 /* /book: the booking flow (components/book/BookingFlow). Tokens: globals.css. */
 .book h1{margin-bottom:14px}
+/* rows never stretch to fill the 100vh page: while the form streams in, the
+   band's row would otherwise grow and then shrink (layout shift) */
+.inner.book{align-content:start}
 .bk{margin-top:36px;max-width:620px}
 .bk-prog{display:flex;flex-wrap:wrap;gap:6px 22px;list-style:none;margin:0 0 30px;padding:0 0 16px;border-bottom:1px solid var(--rule)}
 .bk-prog li{display:flex;align-items:baseline;gap:7px;font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
@@ -98,7 +101,12 @@
 
 .receipt .rc-actions{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:16px}
 .receipt .rc-actions .edit{margin-top:0;background:none;border:0;border-bottom:1px solid var(--paper-ink);border-radius:0;padding:0;color:var(--paper-ink);cursor:pointer}
-.book .receipt{position:sticky;top:104px}
+.book .bk-side{position:sticky;top:104px;display:grid;gap:24px;min-width:0}
+/* the still under the card: 3:2 of the column (40.44vw wide), shortened on
+   short screens so the sticky column always fits the viewport. The height is
+   set by the viewport only, never by the image (no layout shift). */
+.bk-art{height:min(26.96vw,max(160px,calc(100vh - 580px)))}
+.bk-band{display:none}
 
 @media (max-width:860px){
   .bk{margin-top:28px}
@@ -106,7 +114,11 @@
   .bk-rrow{grid-template-columns:1fr auto}
   .bk-rrow dt{grid-column:1/-1}
   .bk-nav .btn{flex:1;justify-content:center}
-  .book .receipt{position:static}
+  /* phones: the card follows the form; the still is the band above the heading
+     (the first field stays above the fold) */
+  .book .bk-side{position:static}
+  .bk-art{display:none}
+  .bk-band{display:block;aspect-ratio:3/1;margin-bottom:-20px}
   .bk-field input[type="date"],.bk-field input[type="time"]{max-width:none}
 }
 @media (max-width:380px){.bk-prog{gap:6px 14px}}
