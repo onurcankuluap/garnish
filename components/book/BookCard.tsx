@@ -49,7 +49,7 @@ export default function BookCard({
           </button>
         )}
         {onAsk && (
-          <button type="button" className="edit" onClick={(e) => onAsk(e.currentTarget)}>
+          <button type="button" className="edit" data-concierge-trigger="" onClick={(e) => onAsk(e.currentTarget)}>
             Questions? Ask the AI concierge
           </button>
         )}

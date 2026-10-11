@@ -1,135 +1,136 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { business, phone } from "@/lib/content/facts";
-import { bookHref, save } from "@/lib/compose/selection";
-import { OPEN_CHAT_EVENT, type ChatSurface, type OpenChatDetail } from "@/lib/concierge/events";
-import { MAX_INPUT_CHARS, ask, type AskFailure } from "@/lib/concierge/client";
-import { turnBand, type Answer } from "@/lib/concierge/grounding";
-import { track } from "@/lib/analytics";
+import { useCallback, useEffect, useId, useRef, useState, type ComponentType } from "react";
+import { OPEN_CHAT_EVENT, type OpenChatDetail } from "@/lib/concierge/events";
+import type { ConciergeApi, ConciergeDialogProps } from "./ConciergeDialog";
 
-type Msg =
-  | { id: number; role: "user"; text: string }
-  | { id: number; role: "assistant"; answer: Answer }
-  | { id: number; role: "error"; failure: AskFailure; question: string };
+/** Elements that open the concierge: hovering or focusing one starts the download. */
+export const TRIGGER_SELECTOR = "[data-concierge-trigger]";
 
-const owner = business.ownerFirstName.value;
+type DialogModule = typeof import("./ConciergeDialog");
+let chunk: Promise<DialogModule> | null = null;
 
-const visible = (el: Element | null | undefined): el is HTMLElement =>
-  !!el && el instanceof HTMLElement && el.isConnected && el.getClientRects().length > 0 && getComputedStyle(el).visibility !== "hidden";
+/** Starts (or reuses) the download of the dialog's chunk. A failed load can be retried. */
+export function preloadConcierge(): Promise<DialogModule> {
+  chunk ??= import("./ConciergeDialog").catch((e: unknown) => {
+    chunk = null;
+    throw e;
+  });
+  return chunk;
+}
 
 /**
- * The one AI concierge. A modal <dialog> (focus trap, Esc and an inert page
- * come with it), opened by the `garnish:open-chat` window event from any
- * surface, or by the desktop launcher. Focus returns to whatever opened it;
- * if that is gone or hidden (a phone's hidden launcher), to the bar's Ask
- * button, the launcher or the page.
+ * The concierge host, in the initial bundle: the desktop launcher and the
+ * one `garnish:open-chat` listener, a few hundred bytes. The dialog itself
+ * (with its grounding and client code) is a separate chunk, preloaded when
+ * the browser is idle after load, or as soon as a trigger is hovered or
+ * focused.
  *
- * Answers about the business come from facts.ts (lib/concierge/grounding);
- * other questions go to /api/chat unchanged, whose replies are guarded. No
- * fake typing and no presence status: replies appear when they arrive.
+ * An open that arrives before the chunk has loaded is not lost: it is held,
+ * the trigger shows it is working (aria-busy plus a progress cursor and a
+ * dimmed state), and the dialog opens as soon as it mounts, with focus
+ * landing in it and returning to that trigger on close, as before.
  */
 export default function Concierge() {
-  const uid = useId();
-  const router = useRouter();
-  const dialog = useRef<HTMLDialogElement>(null);
-  const opener = useRef<HTMLElement | null>(null);
-  const launcher = useRef<HTMLButtonElement>(null);
-  const input = useRef<HTMLTextAreaElement>(null);
-  const heading = useRef<HTMLHeadingElement>(null);
-  const log = useRef<HTMLDivElement>(null);
-  const seq = useRef(0);
-  const busy = useRef(false);
-
+  const dialogId = `${useId()}-dlg`;
+  const [Dialog, setDialog] = useState<ComponentType<ConciergeDialogProps> | null>(null);
   const [open, setOpen] = useState(false);
-  const [text, setText] = useState("");
-  const [msgs, setMsgs] = useState<Msg[]>([]);
-  const [thinking, setThinking] = useState(false);
-  const [inputError, setInputError] = useState("");
+  const api = useRef<ConciergeApi | null>(null);
+  const pending = useRef<OpenChatDetail | null>(null);
+  const busyEl = useRef<HTMLElement | null>(null);
 
-  const userTurns = msgs.filter((m) => m.role === "user").length;
-
-  const show = useCallback((detail: OpenChatDetail = {}) => {
-    const d = dialog.current;
-    if (!d || d.open) return;
-    const active = document.activeElement;
-    opener.current = detail.opener ?? (active instanceof HTMLElement && active !== document.body ? active : null);
-    d.showModal();
-    document.documentElement.classList.add("chat-open");
-    setOpen(true);
-    track("chat_open", { surface: (detail.surface ?? "other") satisfies ChatSurface });
-    // phones: don't throw the keyboard up over the conversation on open
-    if (matchMedia("(pointer: coarse)").matches) heading.current?.focus();
-    else input.current?.focus();
+  const setBusy = useCallback((el: HTMLElement | null) => {
+    const prev = busyEl.current;
+    if (prev && prev !== el) {
+      prev.removeAttribute("aria-busy");
+      delete prev.dataset.loading;
+    }
+    busyEl.current = el;
+    if (el) {
+      el.setAttribute("aria-busy", "true");
+      el.dataset.loading = "";
+    }
   }, []);
 
-  const close = useCallback(() => dialog.current?.close(), []);
+  const load = useCallback(() => {
+    preloadConcierge().then(
+      (m) => setDialog(() => m.default),
+      () => {
+        // offline or a failed deploy fetch: drop the held open, let a new tap retry
+        pending.current = null;
+        setBusy(null);
+      },
+    );
+  }, [setBusy]);
 
+  const request = useCallback(
+    (detail: OpenChatDetail) => {
+      if (api.current) return api.current.show(detail);
+      // keep the opener now: focus may move while the chunk loads
+      const active = document.activeElement;
+      const opener = detail.opener ?? (active instanceof HTMLElement && active !== document.body ? active : null);
+      pending.current = { ...detail, opener };
+      setBusy(opener);
+      load();
+    },
+    [load, setBusy],
+  );
+
+  const onReady = useCallback(
+    (a: ConciergeApi) => {
+      api.current = a;
+      const held = pending.current;
+      pending.current = null;
+      setBusy(null);
+      if (held) a.show(held);
+    },
+    [setBusy],
+  );
+
+  // the one listener for every surface (bar Ask, /book card, launcher, other code)
   useEffect(() => {
-    const onOpen = (e: Event) => show((e as CustomEvent<OpenChatDetail | null>).detail ?? {});
+    const onOpen = (e: Event) => request((e as CustomEvent<OpenChatDetail | null>).detail ?? {});
     window.addEventListener(OPEN_CHAT_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_CHAT_EVENT, onOpen);
-  }, [show]);
+  }, [request]);
 
-  // Fires for the close button, Esc and the backdrop alike.
-  function onClose() {
-    document.documentElement.classList.remove("chat-open");
-    setOpen(false);
-    const fallback = [opener.current, document.querySelector(".mbar .ask"), launcher.current, document.getElementById("main")].find(visible);
-    fallback?.focus();
-  }
-
+  // preload: on intent (hover, touch start, focus on a trigger) and when idle after load
   useEffect(() => {
-    const el = log.current;
-    if (el) el.scrollTop = el.scrollHeight;
-  }, [msgs, thinking]);
+    if (Dialog) return;
+    const onIntent = (e: Event) => {
+      if (e.target instanceof Element && e.target.closest(TRIGGER_SELECTOR)) load();
+    };
+    document.addEventListener("pointerover", onIntent, { passive: true });
+    document.addEventListener("focusin", onIntent);
 
-  async function send(question: string) {
-    if (busy.current) return;
-    const q = question.trim();
-    if (!q) return setInputError("Type a question first.");
-    if (q.length > MAX_INPUT_CHARS) return setInputError(`Please keep questions under ${MAX_INPUT_CHARS} characters.`);
-    busy.current = true;
-    setInputError("");
-    setMsgs((m) => [...m, { id: ++seq.current, role: "user", text: q }]);
-    setText("");
-    const r = await ask(q, { onRemote: () => setThinking(true) });
-    setThinking(false);
-    setMsgs((m) => [
-      ...m,
-      r.ok ? { id: ++seq.current, role: "assistant", answer: r.answer } : { id: ++seq.current, role: "error", failure: r, question: q },
-    ]);
-    busy.current = false;
-  }
+    let idle = 0;
+    let timer = 0;
+    const whenIdle = () => {
+      if (typeof window.requestIdleCallback === "function") idle = window.requestIdleCallback(load, { timeout: 4000 });
+      else timer = window.setTimeout(load, 2000);
+    };
+    if (document.readyState === "complete") whenIdle();
+    else window.addEventListener("load", whenIdle, { once: true });
 
-  function retry(id: number, question: string) {
-    // drop the failed exchange; send() adds the question again
-    setMsgs((m) => m.filter((x) => x.id !== id && x.id !== id - 1));
-    void send(question);
-  }
-
-  function toBooking(answer: Answer) {
-    if (!answer.action) return;
-    save(answer.action.selection);
-    track("chat_to_booking", { turn_band: turnBand(userTurns) });
-    opener.current = null; // the page is changing; focus goes to the new page
-    close();
-    router.push(bookHref(answer.action.selection));
-  }
-
-  const counterVisible = text.length > MAX_INPUT_CHARS * 0.8;
+    return () => {
+      document.removeEventListener("pointerover", onIntent);
+      document.removeEventListener("focusin", onIntent);
+      window.removeEventListener("load", whenIdle);
+      if (idle) window.cancelIdleCallback?.(idle);
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [Dialog, load]);
 
   return (
     <>
       <button
-        ref={launcher}
         type="button"
         className="chat-launcher cc-launch"
+        data-concierge-trigger=""
         aria-haspopup="dialog"
-        aria-controls={`${uid}-dlg`}
+        aria-controls={Dialog ? dialogId : undefined}
         aria-expanded={open}
-        onClick={(e) => show({ opener: e.currentTarget, surface: "desktop_tab" })}
+        onClick={(e) => request({ opener: e.currentTarget, surface: "desktop_tab" })}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -142,153 +143,7 @@ export default function Concierge() {
         <span>Ask</span>
         <span className="sr-only"> the AI concierge</span>
       </button>
-
-      <dialog
-        ref={dialog}
-        id={`${uid}-dlg`}
-        className="cc"
-        aria-labelledby={`${uid}-title`}
-        aria-describedby={`${uid}-disc`}
-        onClose={onClose}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) close(); // the backdrop
-        }}
-      >
-        <div className="cc-in">
-          <header className="cc-head">
-            <div>
-              <p className="cc-eyebrow">Garnish</p>
-              <h2 id={`${uid}-title`} ref={heading} tabIndex={-1}>
-                Concierge <span className="cc-badge">AI</span>
-              </h2>
-            </div>
-            <button type="button" className="cc-close" onClick={close}>
-              Close <span className="sr-only">the concierge</span>
-              <i aria-hidden="true" />
-            </button>
-          </header>
-          <p id={`${uid}-disc`} className="cc-disc">
-            <b>AI assistant — {owner} confirms details.</b> It answers from this site&rsquo;s facts and can be wrong. Nothing here is a
-            booking or a quote.
-          </p>
-
-          <div ref={log} className="cc-log" role="log" aria-live="polite" aria-relevant="additions" aria-label="Conversation">
-            {msgs.length === 0 && (
-              <p className="cc-hello">Ask about the events {owner} bartends, the bar options, or how booking works.</p>
-            )}
-            {msgs.map((m) =>
-              m.role === "user" ? (
-                <div key={m.id} className="cc-msg cc-user">
-                  <span className="sr-only">You: </span>
-                  {m.text}
-                </div>
-              ) : m.role === "assistant" ? (
-                <div key={m.id} className="cc-msg cc-bot" data-source={m.answer.source}>
-                  <span className="sr-only">AI assistant: </span>
-                  {m.answer.text}
-                  {m.answer.action && (
-                    <span className="cc-act">
-                      <a
-                        className="btn btn-gold"
-                        href={bookHref(m.answer.action.selection)}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toBooking(m.answer);
-                        }}
-                      >
-                        Check your date <span className="ar" aria-hidden="true" />
-                      </a>
-                    </span>
-                  )}
-                </div>
-              ) : (
-                <div key={m.id} className="cc-msg cc-err" data-kind={m.failure.kind}>
-                  <span className="sr-only">Problem: </span>
-                  {m.failure.message}
-                  {m.failure.retryAfter ? ` (about ${Math.ceil(m.failure.retryAfter)} seconds)` : ""}
-                  {m.failure.retry && (
-                    <span className="cc-act">
-                      <button type="button" className="cc-retry" onClick={() => retry(m.id, m.question)}>
-                        Try again
-                      </button>
-                    </span>
-                  )}
-                </div>
-              ),
-            )}
-          </div>
-          <p className="cc-status" role="status">
-            {thinking ? "The assistant is answering…" : ""}
-          </p>
-
-          <form
-            className="cc-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void send(text);
-            }}
-          >
-            <label htmlFor={`${uid}-q`} className="sr-only">
-              Your question for the AI assistant
-            </label>
-            <textarea
-              id={`${uid}-q`}
-              ref={input}
-              rows={1}
-              value={text}
-              maxLength={MAX_INPUT_CHARS}
-              placeholder="Ask about Garnish…"
-              aria-invalid={inputError ? true : undefined}
-              aria-describedby={[inputError ? `${uid}-qerr` : "", counterVisible ? `${uid}-count` : ""].filter(Boolean).join(" ") || undefined}
-              onChange={(e) => {
-                setText(e.target.value);
-                if (inputError) setInputError("");
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-                  e.preventDefault();
-                  e.currentTarget.form?.requestSubmit();
-                }
-              }}
-            />
-            <button type="submit" className="cc-send" disabled={thinking}>
-              <span aria-hidden="true">→</span>
-              <span className="sr-only">Send</span>
-            </button>
-          </form>
-          {(inputError || counterVisible) && (
-            <p className="cc-meta">
-              {inputError && (
-                <span id={`${uid}-qerr`} className="cc-qerr">
-                  {inputError}
-                </span>
-              )}
-              {counterVisible && (
-                <span id={`${uid}-count`} className="num">
-                  {MAX_INPUT_CHARS - text.length} characters left
-                </span>
-              )}
-            </p>
-          )}
-          <p className="cc-foot">
-            <a
-              href="/book"
-              onClick={(e) => {
-                e.preventDefault();
-                track("chat_to_booking", { turn_band: turnBand(userTurns) });
-                opener.current = null;
-                close();
-                router.push("/book");
-              }}
-            >
-              Check your date
-            </a>
-            <a className="num" href={`tel:${phone.tel}`} data-track="call_click" data-track-where="chat">
-              Call {phone.display}
-            </a>
-          </p>
-        </div>
-      </dialog>
+      {Dialog && <Dialog id={dialogId} onReady={onReady} onOpenChange={setOpen} />}
     </>
   );
 }

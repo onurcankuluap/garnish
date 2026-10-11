@@ -66,6 +66,7 @@ export default function MobileBar() {
       <button
         type="button"
         className="ask"
+        data-concierge-trigger=""
         aria-label="Ask the AI concierge"
         aria-haspopup="dialog"
         onClick={(e) => openConcierge({ opener: e.currentTarget, surface: "sticky_bar" })}

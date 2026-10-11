@@ -52,3 +52,5 @@ html.chat-open .mbar{transform:translateY(100%);visibility:hidden}
   .cc-head{padding-top:12px}
   .cc-msg{max-width:92%}
 }
+/* an open requested before the dialog's chunk has loaded (components/concierge/Concierge.tsx) */
+[data-concierge-trigger][data-loading]{cursor:progress;opacity:.72;transition:opacity .2s var(--expo)}
