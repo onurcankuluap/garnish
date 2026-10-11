@@ -1,0 +1,121 @@
+/* /book: the booking flow (components/book/BookingFlow). Tokens: globals.css. */
+.book h1{margin-bottom:14px}
+.bk{margin-top:36px;max-width:620px}
+.bk-prog{display:flex;flex-wrap:wrap;gap:6px 22px;list-style:none;margin:0 0 30px;padding:0 0 16px;border-bottom:1px solid var(--rule)}
+.bk-prog li{display:flex;align-items:baseline;gap:7px;font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.bk-prog li .rn{font-size:15px;color:var(--muted)}
+.bk-prog li[data-state="done"]{color:var(--text-2)}
+.bk-prog li[data-state="done"] .rn{color:var(--gold)}
+.bk-prog li[aria-current="step"]{color:var(--text)}
+.bk-prog li[aria-current="step"] .rn{color:var(--gold)}
+.bk-prog li[aria-current="step"]>span:last-child{border-bottom:1px solid var(--gold);padding-bottom:4px}
+
+.bk-form{display:block}
+.bk-step{border:0;margin:0;padding:0;min-width:0}
+.js-motion .bk-step{animation:bkrise .5s var(--expo)}
+@keyframes bkrise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.bk-step>legend{padding:0;margin:0;float:left;width:100%}
+.bk-step>legend+*{clear:both}
+.bk-h{font:500 clamp(30px,3vw,40px)/1.05 var(--serif);letter-spacing:-.01em;color:var(--text);scroll-margin-top:110px}
+.bk-h em{font-style:italic;font-weight:400}
+.bk-h:focus{outline:none}
+.bk-h:focus-visible{outline:2px solid var(--gold);outline-offset:6px}
+.bk-count{margin:10px 0 26px;font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+
+.bk-field{margin-bottom:26px}
+.bk-field label,.bk-group legend{display:block;margin-bottom:10px;font:500 11px/1.3 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--text-2)}
+.bk-opt-tag{letter-spacing:.04em;text-transform:none;color:var(--muted);font-weight:400}
+.bk-hint{margin:-2px 0 10px;font:400 13px/1.5 var(--sans);color:var(--muted)}
+.bk-field input,.bk-field select,.bk-field textarea{display:block;width:100%;min-height:48px;padding:12px 0;background:transparent;border:0;border-bottom:1px solid rgba(242,237,228,.4);border-radius:0;color:var(--text);font:400 16px/1.4 var(--sans);color-scheme:dark;scroll-margin:110px 0 120px;transition:border-color .25s var(--expo)}
+.bk-field select{padding-right:28px;appearance:none;background:linear-gradient(45deg,transparent 50%,var(--gold) 50%) right 10px center/6px 6px no-repeat,linear-gradient(-45deg,transparent 50%,var(--gold) 50%) right 4px center/6px 6px no-repeat}
+.bk-field select option{background:var(--graphite);color:var(--text)}
+.bk-field textarea{resize:vertical;min-height:110px}
+.bk-field input:focus,.bk-field select:focus,.bk-field textarea:focus{border-bottom-color:var(--gold)}
+.bk-field input:focus-visible,.bk-field select:focus-visible,.bk-field textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* Tab also stops on the date/time picker button inside the field; the input
+   is then neither :focus nor :focus-visible, only :focus-within. Same ring. */
+.bk-field input[type=date]:focus-within,.bk-field input[type=time]:focus-within{outline:2px solid var(--gold);outline-offset:3px}
+.bk-field.bad input,.bk-field.bad select,.bk-field.bad textarea{border-bottom-color:var(--error)}
+.bk-field input[type="date"],.bk-field input[type="time"]{max-width:280px}
+.bk-err{margin-top:8px;font:500 13.5px/1.45 var(--sans);color:var(--error)}
+.bk-row{display:grid;grid-template-columns:1fr 1fr;gap:0 28px}
+.bk-readout{margin:-12px 0 26px;font:italic 500 20px/1.2 var(--serif);color:var(--gold)}
+.bk-note{margin:0 0 22px;font:400 14px/1.6 var(--sans);color:var(--text-2)}
+.bk-counter{margin:-18px 0 22px;font:400 12.5px/1 var(--sans);color:var(--muted)}
+.bk-muted{color:var(--muted)}
+
+.bk-group{border:0;margin:0 0 26px;padding:0;min-width:0}
+.bk-opts{display:flex;flex-wrap:wrap;gap:8px}
+.bk-opts:focus{outline:none}
+.bk-opt{position:relative}
+.bk-opt input{position:absolute;opacity:0;width:1px;height:1px}
+.bk-opt span{display:inline-flex;align-items:center;min-height:44px;padding:0 16px;border:1px solid var(--rule-strong);border-radius:2px;font:500 14px/1 var(--sans);color:var(--text);cursor:pointer;transition:background-color .25s var(--expo),border-color .25s var(--expo)}
+.bk-opt:hover span{border-color:var(--text-2)}
+.bk-opt input:checked+span{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.bk-opt input:focus-visible+span{outline:2px solid var(--gold);outline-offset:3px}
+.bk-group.bad .bk-opt span{border-color:var(--error)}
+
+.bk-summary{margin:0 0 26px;padding:18px 20px;border:1px solid var(--error);border-left-width:4px;background:rgba(240,180,162,.06)}
+.bk-summary:focus{outline:2px solid var(--error);outline-offset:3px}
+.bk-summary h3{font:600 12px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--error);margin-bottom:10px}
+.bk-summary ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.bk-summary li,.bk-summary a{font:400 14.5px/1.5 var(--sans);color:var(--text)}
+.bk-summary a{text-decoration:underline;text-decoration-color:var(--error);text-underline-offset:3px}
+
+.bk-review{margin:0 0 22px;border-top:1px solid var(--rule-strong)}
+.bk-rrow{display:grid;grid-template-columns:110px 1fr auto;gap:4px 18px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule)}
+.bk-rrow dt{font:600 10.5px/1.9 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.bk-rrow dd{margin:0;font:400 15px/1.55 var(--sans);color:var(--text);overflow-wrap:anywhere}
+.bk-pre{white-space:pre-wrap}
+.bk-redit button{min-height:44px;padding:0 4px;background:none;border:0;font:500 13px/1 var(--sans);color:var(--text);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:4px}
+
+.bk-nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:8px;padding-top:22px;border-top:1px solid var(--rule)}
+.bk-nav .btn{margin-left:auto}
+.bk-nav .btn[disabled]{opacity:.6;cursor:progress}
+.bk-back{min-height:48px;padding:0 6px;background:none;border:0;font:500 13px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--text-2)}
+.bk-back:hover{color:var(--text)}
+.btn-line{background:transparent;color:var(--text);border:1px solid var(--rule-strong)}
+.btn-line:hover{border-color:var(--gold)}
+
+.bk-failure{margin:0 0 22px;padding:18px 20px;border:1px solid var(--error);border-left-width:4px;background:rgba(240,180,162,.06)}
+.bk-failure:focus{outline:2px solid var(--error);outline-offset:3px}
+.bk-failure h3{font:600 12px/1.3 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--error);margin-bottom:8px}
+.bk-failure p{font:400 14.5px/1.55 var(--sans);color:var(--text);margin-bottom:8px}
+.bk-failure-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:12px}
+.bk-offline{margin:0 0 22px;padding:12px 16px;border:1px dashed var(--rule-strong);font:400 14px/1.5 var(--sans);color:var(--text-2)}
+.bk-alt{margin-top:30px;font:400 14px/1.6 var(--sans);color:var(--muted)}
+
+.bk-done .bk-h{font-size:clamp(34px,3.6vw,48px)}
+.bk-ref{margin:14px 0 26px;font:500 12px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.bk-ref b{color:var(--gold);letter-spacing:.2em}
+.bk-sub{font:500 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--text-2);margin-bottom:14px}
+.bk-next{margin:0 0 24px;padding-left:20px;display:grid;gap:12px;font:400 15.5px/1.6 var(--sans);color:var(--text)}
+.bk-next li::marker{color:var(--gold);font-family:var(--serif)}
+.bk-mock{margin:0 0 24px;padding:10px 14px;border:1px dashed var(--rule-strong);font:400 13px/1.5 var(--sans);color:var(--muted)}
+.bk-ctas{margin-top:8px}
+
+.bk-hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden}
+
+.receipt .rc-actions{display:flex;flex-wrap:wrap;gap:4px 22px;margin-top:16px}
+.receipt .rc-actions .edit{margin-top:0;background:none;border:0;border-bottom:1px solid var(--paper-ink);border-radius:0;padding:0;color:var(--paper-ink);cursor:pointer}
+.book .receipt{position:sticky;top:104px}
+
+@media (max-width:860px){
+  .bk{margin-top:28px}
+  .bk-row{grid-template-columns:1fr}
+  .bk-rrow{grid-template-columns:1fr auto}
+  .bk-rrow dt{grid-column:1/-1}
+  .bk-nav .btn{flex:1;justify-content:center}
+  .book .receipt{position:static}
+  .bk-field input[type="date"],.bk-field input[type="time"]{max-width:none}
+}
+@media (max-width:380px){.bk-prog{gap:6px 14px}}
+/* Phones: "v. Review" always starts the second row. Whether five steps fit on
+   one row depended on the font (Inter vs. its metric-adjusted fallback is ~5%
+   wider), so a late web font re-wrapped the row and shifted the form (CLS 0.19
+   at 375-429px). Same two rows at every phone width, with either font. */
+@media (max-width:439px){.bk-prog li:nth-child(5){flex-basis:100%}}
+/* "Check your date." fitted one line at 360px by 1px in Cormorant and not at
+   all in its fallback, so the font swap re-wrapped it (CLS 0.21). Below 373px
+   the size now follows the width, leaving room for either font; 52px above. */
+@media (max-width:439px){.book h1{font-size:min(52px,calc((100vw - 40px) / 6.4))}}

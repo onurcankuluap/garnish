@@ -1,158 +1,83 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
-import CursorDot from "@/components/CursorDot";
-import BartenderWidget from "@/components/BartenderWidget";
+import "./styles/lit.css";
+import Header from "@/components/site/Header";
+import MobileBar from "@/components/site/MobileBar";
+import Footer from "@/components/site/Footer";
+import Concierge from "@/components/concierge/Concierge";
+import "./styles/concierge.css";
+import { BASE_URL, DESCRIPTION, SITE_TITLE, jsonLd } from "@/lib/content/seo";
+import { business } from "@/lib/content/facts";
 
+// Self-hosted at build time by next/font (no request to Google at runtime),
+// with metric-adjusted fallbacks so the swap does not shift the layout.
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
+  style: ["normal", "italic"],
   variable: "--font-cormorant",
+  display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 });
-
-const BASE_URL = "https://www.garnish.info";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Garnish | Private Bartender for Hire — Rehoboth Beach, DE",
+    default: SITE_TITLE,
     template: "%s | Garnish Private Bartender",
   },
-  description:
-    "Hire a private bartender for weddings, dinner parties, corporate events & more. Onur Kulualp brings 8 years of professional bar experience to Rehoboth Beach, DE, Philadelphia & DC.",
-  keywords: [
-    "private bartender",
-    "rent a bartender near me",
-    "bartender for hire",
-    "private bartender Rehoboth Beach",
-    "private bartender Delaware",
-    "wedding bartender Delaware",
-    "private event bartender",
-    "mobile bartender",
-    "bartender for private party",
-    "cocktail bartender for hire",
-    "bespoke bartending service",
-    "bartender Philadelphia",
-    "bartender DC",
-    "private bartender near me",
-  ],
-  authors: [{ name: "Onur Kulualp" }],
-  creator: "Onur Kulualp",
+  description: DESCRIPTION,
+  authors: business.owner.verified ? [{ name: business.owner.value }] : undefined,
+  creator: business.owner.verified ? business.owner.value : undefined,
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: BASE_URL,
     siteName: "Garnish Private Bartender",
-    title: "Garnish | Private Bartender for Hire — Rehoboth Beach, DE",
-    description:
-      "Hire a private bartender for your next event. Weddings, dinner parties, corporate events. Serving Rehoboth Beach, Philadelphia & DC.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Garnish — Private Bartender Service",
-      },
-    ],
+    title: SITE_TITLE,
+    description: DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
     title: "Garnish | Private Bartender for Hire",
-    description:
-      "Bespoke bartending for private events. 8 years experience. Serving DE, Philadelphia & DC.",
-    images: ["/og-image.jpg"],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true },
-  },
-  alternates: {
-    canonical: BASE_URL,
+    description: DESCRIPTION,
   },
 };
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "LocalBusiness",
-      "@id": `${BASE_URL}/#business`,
-      name: "Garnish Private Bartender",
-      url: BASE_URL,
-      description:
-        "Bespoke private bartending for weddings, dinner parties, corporate events, and more. Serving Rehoboth Beach DE, Philadelphia, and Washington DC.",
-      founder: { "@type": "Person", name: "Onur Kulualp" },
-      areaServed: [
-        { "@type": "City", name: "Rehoboth Beach", containedIn: "Delaware" },
-        { "@type": "City", name: "Philadelphia", containedIn: "Pennsylvania" },
-        { "@type": "City", name: "Washington DC" },
-        { "@type": "State", name: "Delaware" },
-      ],
-      serviceType: [
-        "Private Bartender",
-        "Wedding Bartender",
-        "Corporate Event Bartender",
-        "Dinner Party Bartender",
-        "Mobile Bartending Service",
-      ],
-      telephone: process.env.NEXT_PUBLIC_PHONE_NUMBER,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Rehoboth Beach",
-        addressRegion: "DE",
-        addressCountry: "US",
-      },
-      priceRange: "$$",
-      knowsAbout: [
-        "Craft Cocktails",
-        "Classic Bartending",
-        "Seasonal Menus",
-        "Private Event Service",
-        "Wedding Bar Service",
-      ],
-    },
-    {
-      "@type": "Person",
-      "@id": `${BASE_URL}/#person`,
-      name: "Onur Kulualp",
-      jobTitle: "Private Bartender",
-      worksFor: { "@id": `${BASE_URL}/#business` },
-      hasCredential: [
-        "Bardea Food & Drink",
-        "Stingray Sushi Bar & Asian Grill",
-        "Bodhi Kitchen",
-        "Drift Seafood & Raw Bar",
-      ],
-    },
-  ],
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#0B0B0A",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Before first paint: choose the motion mode, so the static composition never
+// shifts when JavaScript arrives. "intro" (the CSS light-up) plays on the
+// first home-page view of a session.
+const PREPAINT = `(function(){var d=document.documentElement,rm=matchMedia("(prefers-reduced-motion: reduce)").matches;d.classList.add(rm?"rm":"js-motion");if(rm||location.pathname!=="/")return;try{if(sessionStorage.getItem("g:intro"))return;sessionStorage.setItem("g:intro","1")}catch(e){}d.classList.add("intro")})()`;
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: PREPAINT }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }} />
       </head>
-      <body className="bg-background text-foreground font-inter antialiased">
-        <CursorDot />
-        <Nav />
+      <body>
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
+        <Header />
         {children}
-        <BartenderWidget />
+        <Footer />
+        <MobileBar />
+        <Concierge />
       </body>
     </html>
   );
