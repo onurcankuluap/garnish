@@ -304,6 +304,7 @@ html:not(.js-motion) .hd{background:rgba(11,11,10,.96);height:64px;border-bottom
 .foot a{display:inline-flex;min-height:32px;align-items:center}
 .foot a:hover{color:var(--text)}
 .foot .fine{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);font-size:12px}
+.foot .fine a{display:inline;min-height:0;color:var(--text-2);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;padding-block:4px}
 @media (max-width:860px){.foot{grid-template-columns:1fr;padding:48px 20px 32px}}
 
 /* the AI concierge launcher: desktop only (phones use Ask in the bar) */

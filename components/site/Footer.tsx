@@ -41,7 +41,7 @@ export default function Footer() {
       </div>
       <p className="fine">
         Imagery: campaign artwork, AI-generated. It is not a photograph of a Garnish event. The AI concierge is an
-        automated assistant, not a person.
+        automated assistant, not a person. <a href="/privacy">How we handle your details</a>
       </p>
     </footer>
   );

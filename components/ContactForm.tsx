@@ -469,6 +469,12 @@ export default function ContactForm() {
         )}
       </div>
 
+      <p className="font-inter text-sm text-[var(--muted-light)] leading-[1.8]">
+        <a href="/privacy" className="inline-flex min-h-[24px] items-center text-foreground border-b border-gold hover:text-gold transition-colors">
+          How we handle your details
+        </a>
+      </p>
+
       {/* Submit */}
       <div className="pt-2 pb-24 sm:pb-2">
         <button

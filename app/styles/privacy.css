@@ -1,0 +1,18 @@
+/* /privacy: the draft privacy notice (app/privacy/page.tsx). Tokens: lit.css. */
+.pv{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}
+.pv-head{position:sticky;top:120px}
+.pv-meta{margin-top:18px;font:500 11px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.pv-meta:empty{display:none}
+.pv-draft{display:inline-block;margin-top:22px;padding:8px 12px;border:1px dashed var(--gold);color:var(--gold);font:500 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.pv-body{max-width:640px;padding-top:8px}
+.pv-body section{padding:30px 0;border-top:1px solid var(--rule)}
+.pv-body section:first-child{border-top:0;padding-top:0}
+.pv-body h2{font:500 clamp(26px,2.3vw,32px)/1.1 var(--serif);letter-spacing:-.01em;color:var(--text);margin-bottom:14px}
+.pv-body p{font:400 16px/1.7 var(--sans);color:var(--text-2)}
+.pv-body p+p{margin-top:12px}
+.pv-body .tlink{font-size:inherit;line-height:inherit;padding-bottom:1px}
+@media (max-width:860px){
+  .pv{grid-template-columns:1fr}
+  .pv-head{position:static}
+  .pv-body{padding-top:0}
+}

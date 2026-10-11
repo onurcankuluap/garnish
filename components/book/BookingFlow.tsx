@@ -638,7 +638,10 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
                   </dl>
                   <p className="bk-note">
                     This sends a request, not a booking. {business.ownerFirstName.value} confirms availability and your quote with you.
-                    No payment, no account.
+                    No payment, no account.{" "}
+                    <a className="tlink" href="/privacy">
+                      How we handle your details
+                    </a>
                   </p>
 
                   {failure && (

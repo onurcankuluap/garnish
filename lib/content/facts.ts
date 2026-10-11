@@ -28,7 +28,10 @@ export interface Fact<T> {
   value: T;
   verified: boolean;
   status: FactStatus;
-  /** Row in docs/redesign-audit/facts.md. */
+  /**
+   * Row in docs/redesign-audit/facts.md (1–39). Rows 70 and up are build-only
+   * questions, numbered as F70+ in docs/build/FACTS-REGISTER.md.
+   */
   register: number;
   source: string;
   /**
@@ -211,6 +214,23 @@ export const extras: Extra[] = [
   { key: "cocktail-menu", label: "A personalised cocktail menu", fact: fact("A personalised cocktail menu", false, "published", 21, "Bartender + DJ inclusion, app/page.tsx") },
   { key: "dj", label: "A DJ", fact: fact("A DJ", false, "unverified", 18, "Bartender + DJ tier; partner unverified") },
 ];
+
+/* ── privacy notice (/privacy) ───────────────────────────────────── */
+
+export const privacyNotice = {
+  /** The legal business name: the same open question as `business.legalEntity` (F25). */
+  legalName: business.legalEntity,
+  /** Where privacy questions go. MISSING: the site has no public email (F41). */
+  contactEmail: fact<string | null>(null, false, "missing", 70, "none: owner to provide (FACTS-REGISTER F70)"),
+  /** The date the notice takes effect, set when the owner approves it. */
+  effectiveDate: fact<string | null>(null, false, "missing", 71, "none: owner to set on approval (FACTS-REGISTER F71)"),
+  /**
+   * The owner has approved the notice's text (FACTS-REGISTER F72). Until then
+   * /privacy is noindex, stays out of the sitemap and, outside production,
+   * carries a "Draft — pending owner review" marker.
+   */
+  approved: false as boolean,
+} as const;
 
 /* ── helpers ─────────────────────────────────────────────────────── */
 
