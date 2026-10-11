@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Claim, { Placeholder } from "@/components/ui/Claim";
 import { Coupe } from "@/components/site/Logo";
+import Pic from "@/components/ui/Pic";
 import { business, claims, eventTypes, phone, pricingTerms } from "@/lib/content/facts";
 import { BOOK_HREF } from "@/lib/content/site";
 import { verifiedRatesLine } from "@/lib/compose/quote";
@@ -16,23 +17,58 @@ function Eyebrow({ n, children }: { n?: string; children: ReactNode }) {
   );
 }
 
-/** 05 The experience: room for real event photographs, never generated ones. */
+/**
+ * 05 Evenings: mood, not documentation. Three still lifes of the craft (glass,
+ * ice, citrus, candlelight); none of them shows a Garnish event, venue or
+ * guest, and the copy and captions describe only the objects.
+ */
+const EVENINGS = [
+  {
+    name: "ev-setup",
+    w: 1440,
+    h: 1440,
+    cap: "Set before the doors open",
+    alt: "A bar set before service on a wooden tray: a crystal coupe, a brass jigger, three amber bitters bottles, a bowl of citrus peel, a stack of clear ice cubes, a bar spoon and a lit candle.",
+  },
+  {
+    name: "ev-coupes",
+    w: 1440,
+    h: 1800,
+    cap: "Two to start",
+    alt: "Two flutes of a sparkling cocktail with lemon twists on a slate bar top, string lights glowing behind.",
+  },
+  {
+    name: "ev-twist",
+    w: 1440,
+    h: 1800,
+    cap: "The twist",
+    alt: "A red cocktail in a coupe on slate, an orange-peel twist on the rim and a fine mist of citrus oil catching the light.",
+  },
+];
+
 export function Evenings() {
-  const frames = ["A wedding bar, mid-service", "The cocktail in a guest's hand", "The setup, before the doors open"];
   return (
     <section className="sec dark" id="evenings" aria-labelledby="evenings-h">
       <div className="sec-head">
         <Eyebrow n="III.">Evenings</Eyebrow>
         <h2 className="h2" id="evenings-h">
-          The evening, <em>as it was.</em>
+          The evening, <em>in detail.</em>
         </h2>
-        <p className="lead">Photographs from real Garnish events will sit here. Until then, the frames stay empty rather than staged.</p>
+        <p className="lead">Glass, ice, citrus and candlelight: the small things an evening is made of.</p>
       </div>
       <div className="ev-grid">
-        {frames.map((f) => (
-          <figure className="ev-ph" key={f} aria-label={`Placeholder: real Garnish event photo needed (${f})`}>
-            <b>Real Garnish event photo needed</b>
-            <span>{f}</span>
+        {EVENINGS.map((f, i) => (
+          <figure className="ev-fig" key={f.name}>
+            <div className="ev-img">
+              <Pic
+                name={f.name}
+                width={f.w}
+                height={f.h}
+                sizes={i === 0 ? "(max-width: 860px) calc(100vw - 40px), 34vw" : "(max-width: 860px) calc(50vw - 30px), 26vw"}
+                alt={f.alt}
+              />
+            </div>
+            <figcaption>{f.cap}</figcaption>
           </figure>
         ))}
       </div>
@@ -43,7 +79,7 @@ export function Evenings() {
   );
 }
 
-/** 06 About: verified facts only; everything else is a marked placeholder. */
+/** 06 About: verified facts only; everything else is a marked placeholder. The still shows the tools, not the owner. */
 export function About() {
   return (
     <section className="sec paper" id="about" aria-labelledby="about-h">
@@ -94,8 +130,14 @@ export function About() {
             </li>
           </ul>
         </div>
-        <div className="portrait" role="img" aria-label="Placeholder: owner portrait needed">
-          <Placeholder>Portrait of {business.ownerFirstName.value} needed (a real photograph)</Placeholder>
+        <div className="portrait">
+          <Pic
+            name="about-tools"
+            width={1440}
+            height={1800}
+            sizes="(max-width: 860px) calc(100vw - 40px), 42vw"
+            alt="Bar tools laid out on cream linen in daylight: a brass jigger, a strainer, a twisted bar spoon, a paring knife, a cut-crystal glass, a lemon, an orange and a black apron."
+          />
         </div>
       </div>
     </section>
