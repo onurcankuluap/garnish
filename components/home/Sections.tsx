@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Claim, { Placeholder } from "@/components/ui/Claim";
 import { Coupe } from "@/components/site/Logo";
-import Pic from "@/components/ui/Pic";
+import { AboutStill, EveningsGrid } from "./Stills";
 import { business, claims, eventTypes, phone, pricingTerms } from "@/lib/content/facts";
 import { BOOK_HREF } from "@/lib/content/site";
 import { verifiedRatesLine } from "@/lib/compose/quote";
@@ -22,30 +22,6 @@ function Eyebrow({ n, children }: { n?: string; children: ReactNode }) {
  * ice, citrus, candlelight); none of them shows a Garnish event, venue or
  * guest, and the copy and captions describe only the objects.
  */
-const EVENINGS = [
-  {
-    name: "ev-setup",
-    w: 1440,
-    h: 1440,
-    cap: "Set before the doors open",
-    alt: "A bar set before service on a wooden tray: a crystal coupe, a brass jigger, three amber bitters bottles, a bowl of citrus peel, a stack of clear ice cubes, a bar spoon and a lit candle.",
-  },
-  {
-    name: "ev-coupes",
-    w: 1440,
-    h: 1800,
-    cap: "Two to start",
-    alt: "Two flutes of a sparkling cocktail with lemon twists on a slate bar top, string lights glowing behind.",
-  },
-  {
-    name: "ev-twist",
-    w: 1440,
-    h: 1800,
-    cap: "The twist",
-    alt: "A red cocktail in a coupe on slate, an orange-peel twist on the rim and a fine mist of citrus oil catching the light.",
-  },
-];
-
 export function Evenings() {
   return (
     <section className="sec dark" id="evenings" aria-labelledby="evenings-h">
@@ -56,22 +32,7 @@ export function Evenings() {
         </h2>
         <p className="lead">Glass, ice, citrus and candlelight: the small things an evening is made of.</p>
       </div>
-      <div className="ev-grid">
-        {EVENINGS.map((f, i) => (
-          <figure className="ev-fig" key={f.name}>
-            <div className="ev-img">
-              <Pic
-                name={f.name}
-                width={f.w}
-                height={f.h}
-                sizes={i === 0 ? "(max-width: 860px) calc(100vw - 40px), 34vw" : "(max-width: 860px) calc(50vw - 30px), 26vw"}
-                alt={f.alt}
-              />
-            </div>
-            <figcaption>{f.cap}</figcaption>
-          </figure>
-        ))}
-      </div>
+      <EveningsGrid />
       <p className="coupe-div" aria-hidden="true">
         <Coupe width={22} height={28} />
       </p>
@@ -130,15 +91,7 @@ export function About() {
             </li>
           </ul>
         </div>
-        <div className="portrait">
-          <Pic
-            name="about-tools"
-            width={1440}
-            height={1800}
-            sizes="(max-width: 860px) calc(100vw - 40px), 42vw"
-            alt="Bar tools laid out on cream linen in daylight: a brass jigger, a strainer, a twisted bar spoon, a paring knife, a cut-crystal glass, a lemon, an orange and a black apron."
-          />
-        </div>
+        <AboutStill />
       </div>
     </section>
   );
