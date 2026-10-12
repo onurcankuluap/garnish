@@ -114,11 +114,10 @@
   .bk-rrow{grid-template-columns:1fr auto}
   .bk-rrow dt{grid-column:1/-1}
   .bk-nav .btn{flex:1;justify-content:center}
-  /* phones: the card follows the form; the still is the band above the heading
-     (the first field stays above the fold) */
+  /* phones: the card follows the form, then the still as a short band */
   .book .bk-side{position:static}
   .bk-art{display:none}
-  .bk-band{display:block;aspect-ratio:3/1;margin-bottom:-20px}
+  .bk-band{display:block;aspect-ratio:3/1}
   .bk-field input[type="date"],.bk-field input[type="time"]{max-width:none}
 }
 @media (max-width:380px){.bk-prog{gap:6px 14px}}
