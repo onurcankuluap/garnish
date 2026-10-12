@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import ContactForm from "@/components/ContactForm";
 import { phone } from "@/lib/content/facts";
+import Pic from "@/components/ui/Pic";
 
 export const metadata = {
   title: "Book a Private Bartender — Inquire",
@@ -23,7 +24,7 @@ export default function ContactPage() {
       <div className="max-w-7xl mx-auto px-6 md:px-16 grid md:grid-cols-[1fr_1.4fr] gap-0 min-h-[calc(100vh-72px)]">
 
         {/* ── Left panel ── */}
-        <aside className="py-8 md:py-24 md:pr-16 md:border-r border-white/6 flex flex-col justify-between">
+        <aside className="py-8 md:py-24 md:pr-16 md:border-r border-white/6 flex flex-col md:justify-between">
           <div>
             {/* Label */}
             <div className="flex items-center gap-4 mb-6 md:mb-10">
@@ -59,17 +60,19 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Bottom ornament */}
-          <div className="hidden md:block mt-16 opacity-20">
-            <svg width="28" height="36" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M3 8 L29 8 Q27 20 16 28 Q5 20 3 8 Z" stroke="#c9a84c" strokeWidth="1" strokeLinejoin="round" fill="rgba(201,168,76,0.05)"/>
-              <line x1="16" y1="28" x2="16" y2="36" stroke="#c9a84c" strokeWidth="1" strokeLinecap="round"/>
-              <line x1="9" y1="36" x2="23" y2="36" stroke="#c9a84c" strokeWidth="1" strokeLinecap="round"/>
-              <circle cx="27" cy="6.5" r="3.8" stroke="#c9a84c" strokeWidth="0.7" fill="none"/>
-              <line x1="27" y1="2.7" x2="27" y2="10.3" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
-              <line x1="23.5" y1="4.6" x2="30.5" y2="8.4" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
-              <line x1="23.5" y1="8.4" x2="30.5" y2="4.6" stroke="#c9a84c" strokeWidth="0.5" strokeLinecap="round"/>
-            </svg>
+          {/* A quiet still: a short band above the heading on phones, under the call link on desktop */}
+          <div className="pg-art order-first md:order-none aspect-[3/1] md:aspect-[4/5] w-full md:max-w-[340px] mb-6 md:mb-0 md:mt-16">
+            <Pic
+              name="contact-highball-d"
+              mobile="contact-highball-m"
+              mq="(max-width: 767px)"
+              width={1440}
+              height={1800}
+              sizes="340px"
+              mobileSizes="calc(100vw - 48px)"
+              eager
+              alt="A gin and tonic in a tall glass over ice, a cucumber ribbon spiralling inside and a sprig with juniper berries on top, on a slate tray."
+            />
           </div>
         </aside>
 

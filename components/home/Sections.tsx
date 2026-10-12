@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Claim, { Placeholder } from "@/components/ui/Claim";
 import { Coupe } from "@/components/site/Logo";
+import { AboutStill, EveningsGrid } from "./Stills";
 import { business, claims, eventTypes, phone, pricingTerms } from "@/lib/content/facts";
 import { BOOK_HREF } from "@/lib/content/site";
 import { verifiedRatesLine } from "@/lib/compose/quote";
@@ -16,26 +17,22 @@ function Eyebrow({ n, children }: { n?: string; children: ReactNode }) {
   );
 }
 
-/** 05 The experience: room for real event photographs, never generated ones. */
+/**
+ * 05 Evenings: mood, not documentation. Three still lifes of the craft (glass,
+ * ice, citrus, candlelight); none of them shows a Garnish event, venue or
+ * guest, and the copy and captions describe only the objects.
+ */
 export function Evenings() {
-  const frames = ["A wedding bar, mid-service", "The cocktail in a guest's hand", "The setup, before the doors open"];
   return (
     <section className="sec dark" id="evenings" aria-labelledby="evenings-h">
       <div className="sec-head">
         <Eyebrow n="III.">Evenings</Eyebrow>
         <h2 className="h2" id="evenings-h">
-          The evening, <em>as it was.</em>
+          The evening, <em>in detail.</em>
         </h2>
-        <p className="lead">Photographs from real Garnish events will sit here. Until then, the frames stay empty rather than staged.</p>
+        <p className="lead">Glass, ice, citrus and candlelight: the small things an evening is made of.</p>
       </div>
-      <div className="ev-grid">
-        {frames.map((f) => (
-          <figure className="ev-ph" key={f} aria-label={`Placeholder: real Garnish event photo needed (${f})`}>
-            <b>Real Garnish event photo needed</b>
-            <span>{f}</span>
-          </figure>
-        ))}
-      </div>
+      <EveningsGrid />
       <p className="coupe-div" aria-hidden="true">
         <Coupe width={22} height={28} />
       </p>
@@ -43,7 +40,7 @@ export function Evenings() {
   );
 }
 
-/** 06 About: verified facts only; everything else is a marked placeholder. */
+/** 06 About: verified facts only; everything else is a marked placeholder. The still shows the tools, not the owner. */
 export function About() {
   return (
     <section className="sec paper" id="about" aria-labelledby="about-h">
@@ -94,9 +91,7 @@ export function About() {
             </li>
           </ul>
         </div>
-        <div className="portrait" role="img" aria-label="Placeholder: owner portrait needed">
-          <Placeholder>Portrait of {business.ownerFirstName.value} needed (a real photograph)</Placeholder>
-        </div>
+        <AboutStill />
       </div>
     </section>
   );

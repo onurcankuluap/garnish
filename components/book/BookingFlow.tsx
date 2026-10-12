@@ -58,7 +58,7 @@ const fid = (f: DraftField) => `bk-${f}`;
  * fills step three and stays editable. One idempotency key per booking, so a
  * retry can never create a second lead.
  */
-export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection; children?: ReactNode }) {
+export default function BookingFlow({ fromUrl, children, art }: { fromUrl: Selection; children?: ReactNode; art?: ReactNode }) {
   const uid = useId();
   const [draft, setDraft] = useState<Draft>(() => fromSelection(fromUrl));
   const [step, setStep] = useState<StepKey>("date");
@@ -275,7 +275,10 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
             </div>
           </section>
         </div>
-        <BookCard sel={sel} />
+        <div className="bk-side">
+          <BookCard sel={sel} />
+          {art}
+        </div>
       </>
     );
   }
@@ -703,7 +706,10 @@ export default function BookingFlow({ fromUrl, children }: { fromUrl: Selection;
           </p>
         </section>
       </div>
-      <BookCard sel={sel} onEdit={() => go("bar")} onAsk={askConcierge} />
+      <div className="bk-side">
+        <BookCard sel={sel} onEdit={() => go("bar")} onAsk={askConcierge} />
+        {art}
+      </div>
     </>
   );
 }
